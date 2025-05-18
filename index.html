@@ -1,0 +1,3208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bismarck Secondary School</title>
+    <!-- Font Awesome for modern icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://unpkg.com/docx@7.8.2/build/index.min.js"></script>
+<script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --accent: #f39c12;
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --highlight: #e91e63;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            position: relative;
+            overflow: hidden;
+            color: white;
+            padding: 30px 10px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            height: 120px;
+            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover no-repeat;
+        }
+
+        .header h1, .header p {
+            animation: headerTextColorCycle 30s infinite;
+        }
+
+        @keyframes headerTextColorCycle {
+            0% { color: #ffffff; }
+            16.67% { color: var(--primary); }
+            33.33% { color: var(--secondary); }
+            50% { color: var(--accent); }
+            66.67% { color: var(--highlight); }
+            83.33% { color: var(--light); }
+            100% { color: #ffffff; }
+        }
+
+        .header h1 {
+            font-size: 2rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+        }
+
+        .announcement-section {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            color: white;
+            animation: slideInAnnouncement 1s ease-out;
+            border: 2px solid transparent;
+            animation: glowBorder 3s infinite;
+        }
+
+        @keyframes slideInAnnouncement {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes glowBorder {
+            0% { border-color: rgba(255, 255, 255, 0.3); }
+            50% { border-color: rgba(255, 255, 255, 0.8); }
+            100% { border-color: rgba(255, 255, 255, 0.3); }
+        }
+
+        .announcement-section .announcement-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .announcement-section .timestamp {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .announcement-section .icon-bell {
+            font-size: 1.8em;
+            margin-right: 15px;
+        }
+
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            margin-bottom: 20px;
+            background-color: var(--light);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-item {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab-item:last-child {
+            border-bottom: none;
+        }
+
+        .tab-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab-item:hover {
+            background-color: #e0e0e0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .icon-home::before { content: '🏠'; }
+        .icon-user::before { content: '👤'; }
+        .icon-list::before { content: '📋'; }
+        .icon-results::before { content: '📝'; }
+        .icon-view-results::before { content: '📊'; }
+        .icon-past-results::before { content: '📚'; }
+        .icon-academic::before { content: '⚙️'; }
+        .icon-sms::before { content: '📱'; }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .table th, .table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .notification {
+    position: fixed;
+    top: 10px;
+    right: -300px;
+    background-color: var(--primary);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    z-index: 2000;
+    max-width: 300px;
+    font-size: 1rem;
+    font-weight: 600;
+    animation: slideIn 0.5s ease forwards, slideOut 0.5s ease 4s forwards;
+}
+.notification.success {
+    background-color: var(--secondary);
+}
+.notification.error {
+    background-color: var(--danger);
+}
+
+        @keyframes slideIn {
+            from { right: -300px; }
+            to { right: 10px; }
+        }
+
+        @keyframes slideOut {
+            from { right: 10px; }
+            to { right: -300px; }
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress {
+            height: 18px;
+            background-color: var(--secondary);
+            text-align: center;
+            color: white;
+            line-height: 18px;
+            transition: width 0.3s ease;
+        }
+
+        .highlight-name {
+            color: var(--highlight);
+            font-weight: bold;
+        }
+
+        .powered-by {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .powered-by button {
+            background-color: transparent;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            animation: textColorCycle 6s infinite;
+        }
+
+        @keyframes textColorCycle {
+            0% { color: var(--primary); }
+            33% { color: var(--secondary); }
+            66% { color: var(--accent); }
+            100% { color: var(--primary); }
+        }
+
+        .loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .loading-spinner.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .spinner-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 11%);
+            background-size: 20px 20px;
+            animation: particleDrift 20s linear infinite;
+        }
+
+        @keyframes particleDrift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100px, -100px); }
+        }
+
+        .spinner {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .spinner-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 5px dashed var(--accent);
+            border-radius: 50%;
+            animation: spin 2s ease-in-out infinite;
+        }
+
+        .spinner-ring:nth-child(2) {
+            border-color: var(--secondary);
+            animation-duration: 2.5s;
+            transform: scale(0.8);
+        }
+
+        .spinner-ring:nth-child(3) {
+            border-color: var(--primary);
+            animation-duration: 3s;
+            transform: scale(0.6);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-spinner h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            animation: pulse 2s ease infinite;
+        }
+
+        .loading-spinner p {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .loading-spinner .motto {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .print-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .print-header h1 {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+
+        .print-header p {
+            font-size: 0.9em;
+            color: #34495e;
+        }
+
+        .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.summary-table th, .summary-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.summary-table th {
+    background-color: var(--primary);
+    color: white;
+}
+
+        .summary-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+       .table th, .table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 11px;
+    min-width: 50px;
+}
+.phone-input {
+    width: 150px;
+    padding: 8px;
+    font-size: 14px;
+}
+.sms-sent::after {
+    content: '✔';
+    color: var(--secondary);
+    margin-left: 10px;
+    font-size: 1.2em;
+}
+
+    </style>
+</head>
+<body>
+</div>
+<div class="slideshow-container">
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner-background"></div>
+        <div class="spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+        </div>
+        <h1>Bismarck Secondary School</h1>
+        <p>Welcome to Our Student Management System</p>
+        <p class="motto">Education for Excellence</p>
+    </div>
+
+    <div class="container">
+        <div class="header">
+    <div class="carousel">
+        <div class="carousel-images">
+            <!-- 15 images will be dynamically added via JavaScript -->
+        </div>
+    </div>
+    <div class="header-content">
+        <h1>Bismarck Secondary School</h1>
+        <p>Student Registration, Results, and Administration System</p>
+    </div>
+</div>
+
+        <div class="announcement-section" id="announcementSection">
+            <div class="announcement-content">
+                <i class="fa-solid fa-bell icon-bell"></i>
+                <div>
+                    <div class="timestamp" id="announcementTimestamp"></div>
+                    <p id="announcementText">No announcements at the moment.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-container">
+            <ul class="tabs">
+                <li class="tab-item active" data-tab="home"><span class="icon icon-home"></span>Home</li>
+                <li class="tab-item" data-tab="register"><span class="icon icon-user"></span>Register Students</li>
+                <li class="tab-item" data-tab="students"><span class="icon icon-list"></span>Students List</li>
+                <li class="tab-item" data-tab="resultsEntry"><span class="icon icon-results"></span>Enter Results</li>
+                <li class="tab-item" data-tab="results"><span class="icon icon-view-results"></span>View Results</li>
+                <li class="tab-item" data-tab="pastResults"><span class="icon icon-past-results"></span>Past Results</li>
+                <li class="tab-item" data-tab="sms"><span class="icon icon-sms"></span>Send SMS</li>
+                <li class="tab-item" data-tab="academic"><span class="icon icon-academic"></span>Academic Office</li>
+            </ul>
+            <!-- Home Tab -->
+            <div id="home" class="tab-content active">
+                <div class="card">
+                    <h2>Welcome to Bismarck Secondary School System</h2>
+                    <p>This system is designed to manage student registration, track student lists, enter results, and store past results for 2025–2030.</p>
+                    <br>
+                    <p>System Benefits:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px; margin-bottom: 20px;">
+                        <li>Easy bulk student registration</li>
+                        <li>Alphabetically sorted student lists</li>
+                        <li>Subject-specific result entry by teachers</li>
+                        <li>Detailed results with printing capability</li>
+                        <li>Past results storage</li>
+                        <li>Search students by name</li>
+                        <li>Send results to parents via SMS</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Register Students Tab -->
+            <div id="register" class="tab-content">
+                <div class="card">
+                    <h2>Register Students</h2>
+                  <button class="btn btn-danger" onclick="goBack()">Back</button>
+                    <form id="registrationForm">
+                        <div class="form-group">
+                            <label for="studentNames">Student Names (one per line)</label>
+                            <textarea id="studentNames" name="studentNames" rows="8" placeholder="Name 1\nName 2\nName 3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="class">Class</label>
+                            <select id="class" name="class" required>
+                                <option value="">Select Class</option>
+                                <option value="Form 1">Form 1</option>
+                                <option value="Form 2">Form 2</option>
+                                <option value="Form 3">Form 3</option>
+                                <option value="Form 4">Form 4</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="stream">Stream</label>
+                            <select id="stream" name="stream" required>
+                                <option value="">Select Stream</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="year">Year</label>
+                            <select id="year" name="year" required>
+                                <option value="">Select Year</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="regDate">Registration Date</label>
+                            <input type="date" id="regDate" name="regDate" required>
+                        </div>
+                        <div class="form-group" id="businessStudySelection">
+                            <label for="takesBusinessStudy">Takes Business Study?</label>
+                            <input type="checkbox" id="takesBusinessStudy" name="takesBusinessStudy">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Students List Tab -->
+            <div id="students" class="tab-content">
+                <div class="card">
+                    <h2>Students List</h2>
+                    <button class="btn btn-danger" onclick="goBack()">Back</button>
+                    <div class="form-group">
+                        <label for="searchStudentName">Search Student by Name</label>
+                        <input type="text" id="searchStudentName" name="searchStudentName" placeholder="Enter student name">
+                        <button class="btn btn-primary" id="searchStudentBtn" style="margin-top: 8px;">Search</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchExamType">Exam Type</label>
+                        <select id="searchExamType" name="searchExamType">
+                            <option value="">Select Exam Type</option>
+                            <option value="Midterm">Midterm</option>
+                            <option value="Terminal">Terminal</option>
+                            <option value="Weekly Test">Weekly Test</option>
+                            <option value="Mock">Mock</option>
+                            <option value="Pre-National">Pre-National</option>
+                            <option value="Annual">Annual</option>
+                            <option value="Classes Test">Classes Test</option>
+                            <option value="Other Exam">Other Exam</option>
+                        </select>
+                    </div>
+                    <div id="searchResults" style="margin-top: 15px;"></div>
+                    <hr>
+                    <h3>All Students</h3>
+                    <div class="form-group">
+                        <label for="studentClass">Class</label>
+                        <select id="studentClass" name="studentClass">
+                            <option value="">Select Class</option>
+                            <option value="Form 1">Form 1</option>
+                            <option value="Form 2">Form 2</option>
+                            <option value="Form 3">Form 3</option>
+                            <option value="Form 4">Form 4</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentStream">Stream</label>
+                        <select id="studentStream" name="studentStream">
+                            <option value="">Select Stream</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentYear">Year</label>
+                        <select id="studentYear" name="studentYear">
+                            <option value="">Select Year</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="viewStudentsBtn">View List</button>
+                    <button class="btn btn-success" id="showStudentListBtn">Show Student List</button>
+                    <button class="btn btn-danger" id="hideStudentListBtn" style="display: none;">Hide Student List</button>
+                    <div id="studentList" style="margin-top: 15px; display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Enter Results Tab -->
+            <div id="resultsEntry" class="tab-content">
+                <div class="card" id="teacherAuthPanel">
+                    <h2>Teacher Authentication</h2>
+                    <form id="teacherAuthForm">
+                        <div class="form-group">
+                            <label for="authTeacherName">Teacher Name</label>
+                            <input type="text" id="authTeacherName" name="authTeacherName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="authTeacherPassword">Password</label>
+                            <input type="password" id="authTeacherPassword" name="authTeacherPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="authSubject">Subject</label>
+                            <select id="authSubject" name="authSubject" required>
+                                <option value="">Select Subject</option>
+                                <option value="Tanzania History">Tanzania History</option>
+                                <option value="History">History</option>
+                                <option value="Geography">Geography</option>
+                                <option value="Kiswahili">Kiswahili</option>
+                                <option value="English">English</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Business Study">Business Study</option>
+                                <option value="EDK">EDK</option>
+                                <option value="Book Keeping">Book Keeping</option>
+                                <option value="Civics">Civics</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="registerTeacherBtn">Register</button>
+                        <button type="submit" class="btn btn-success" id="loginTeacherBtn">Login</button>
+                    </form>
+                </div>
+
+                <div id="resultsEntryPanel" class="card" style="display: none;">
+                    <h2>Enter Results</h2>
+                    <button class="btn btn-danger" id="logoutTeacherBtn">Logout</button>
+                    <button class="btn btn-danger" onclick="goBack()">Back</button>
+                    <div class="form-group">
+                        <label for="resultClass">Class</label>
+                        <select id="resultClass" name="resultClass" required>
+                            <option value="">Select Class</option>
+                            <option value="Form 1">Form 1</option>
+                            <option value="Form 2">Form 2</option>
+                            <option value="Form 3">Form 3</option>
+                            <option value="Form 4">Form 4</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resultStream">Stream</label>
+                        <select id="resultStream" name="resultStream" required>
+                            <option value="">Select Stream</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resultYear">Year</label>
+                        <select id="resultYear" name="resultYear" required>
+                            <option value="">Select Year</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resultExamType">Exam Type</label>
+                        <select id="resultExamType" name="resultExamType" required>
+                            <option value="">Select Exam Type</option>
+                            <option value="Midterm">Midterm</option>
+                            <option value="Terminal">Terminal</option>
+                            <option value="Weekly Test">Weekly Test</option>
+                            <option value="Mock">Mock</option>
+                            <option value="Pre-National">Pre-National</option>
+                            <option value="Annual">Annual</option>
+                            <option value="Classes Test">Classes Test</option>
+                            <option value="Other Exam">Other Exam</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resultSubject">Subject</label>
+                        <select id="resultSubject" name="resultSubject" required>
+                            <option value="">Select Subject</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="loadStudentsForResultsBtn">Start Entering Results</button>
+                    <button class="btn btn-success" id="showResultEntryFormBtn">Show Results Entry Form</button>
+                    <button class="btn btn-danger" id="hideResultEntryFormBtn" style="display: none;">Hide Results Entry Form</button>
+                    <div id="resultEntryForm" style="margin-top: 15px; display: none;">
+                        <h3>Enter Marks for <span id="currentStudent" class="highlight-name"></span></h3>
+                        <div class="progress-bar">
+                            <div class="progress" id="progressBar"></div>
+                        </div>
+                        <p id="progressText"></p>
+                        <div class="form-group">
+                            <label for="marks">Marks (0–100)</label>
+                            <input type="number" id="marks" name="marks" min="0" max="100" required>
+                        </div>
+                        <button class="btn btn-success" id="saveMarksBtn">Save Marks</button>
+                    </div>
+                    <button class="btn btn-success" id="showResultsTableBtn">Show Results Table</button>
+                    <button class="btn btn-danger" id="hideResultsTableBtn" style="display: none;">Hide Results Table</button>
+                    <div id="resultsTable" style="margin-top: 15px; display: none;"></div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-success" id="submitResultsBtn">Submit Results</button>
+                    </div>
+                </div>
+
+                <div id="editResultsPanel" class="card" style="display: none;">
+                    <h2>Edit Results</h2>
+                    <button class="btn btn-danger" onclick="goBack()">Back</button>
+                    <div class="form-group">
+                        <label for="editResultClass">Class</label>
+                        <select id="editResultClass" name="editResultClass">
+                            <option value="">Select Class</option>
+                            <option value="Form 1">Form 1</option>
+                            <option value="Form 2">Form 2</option>
+                            <option value="Form 3">Form 3</option>
+                            <option value="Form 4">Form 4</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editResultStream">Stream</label>
+                        <select id="editResultStream" name="editResultStream">
+                            <option value="">Select Stream</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editResultYear">Year</label>
+                        <select id="editResultYear" name="editResultYear">
+                            <option value="">Select Year</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editResultExamType">Exam Type</label>
+                        <select id="editResultExamType" name="editResultExamType">
+                            <option value="">Select Exam Type</option>
+                            <option value="Midterm">Midterm</option>
+                            <option value="Terminal">Terminal</option>
+                            <option value="Weekly Test">Weekly Test</option>
+                            <option value="Mock">Mock</option>
+                            <option value="Pre-National">Pre-National</option>
+                            <option value="Annual">Annual</option>
+                            <option value="Classes Test">Classes Test</option>
+                            <option value="Other Exam">Other Exam</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editResultSubject">Subject</label>
+                        <select id="editResultSubject" name="editResultSubject">
+                            <option value="">Select Subject</option>
+                            <option value="Tanzania History">Tanzania History</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Kiswahili">Kiswahili</option>
+                            <option value="English">English</option>
+                            <option value="Biology">Biology</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Business Study">Business Study</option>
+                            <option value="EDK">EDK</option>
+                            <option value="Book Keeping">Book Keeping</option>
+                            <option value="Civics">Civics</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="loadEditResultsBtn">Load Results to Edit</button>
+                    <button class="btn btn-success" id="showEditResultsTableBtn">Show Edit Results Table</button>
+                    <button class="btn btn-danger" id="hideEditResultsTableBtn" style="display: none;">Hide Edit Results Table</button>
+                    <div id="editResultsTable" style="margin-top: 15px; display: none;"></div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-success" id="updateResultsBtn">Update Results</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Results Tab -->
+            
+            <div id="results" class="tab-content">
+                <div class="card">
+                    <h2>View Results</h2>
+                     <button class="btn btn-danger" onclick="goBack()">Back</button>
+                    <div class="form-group">
+                        <label for="resultsClass">Class</label>
+                        <select id="resultsClass" name="resultsClass">
+                            <option value="">Select Class</option>
+                            <option value="Form 1">Form 1</option>
+                            <option value="Form 2">Form 2</option>
+                            <option value="Form 3">Form 3</option>
+                            <option value="Form 4">Form 4</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resultsStream">Stream</label>
+                        <select id="resultsStream" name="resultsStream">
+                            <option value="">Select Stream</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resultsYear">Year</label>
+                        <select id="resultsYear" name="resultsYear">
+                            <option value="">Select Year</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resultsExamType">Exam Type</label>
+                        <select id="resultsExamType" name="resultsExamType">
+                            <option value="">Select Exam Type</option>
+                            <option value="Midterm">Midterm</option>
+                            <option value="Terminal">Terminal</option>
+                            <option value="Weekly Test">Weekly Test</option>
+                            <option value="Mock">Mock</option>
+                            <option value="Pre-National">Pre-National</option>
+                            <option value="Annual">Annual</option>
+                            <option value="Classes Test">Classes Test</option>
+                            <option value="Other Exam">Other Exam</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="viewResultsBtn">View Results</button>
+                    <button class="btn btn-success" id="printResultsBtn">Print Results (PDF)</button>
+                    <button class="btn btn-success" id="exportToCSVBtn">Export to CSV</button>
+                    <button class="btn btn-success" id="exportToWordBtn">Export to Word</button>
+                    <button class="btn btn-success" id="showResultsDisplayBtn">Show Results</button>
+                    <button class="btn btn-danger" id="hideResultsDisplayBtn" style="display: none;">Hide Results</button>
+                    <div id="resultsDisplay" style="margin-top: 15px; display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Past Results Tab -->
+            <div id="pastResults" class="tab-content">
+    <div class="card">
+        <h2>Past Results</h2>
+        <button class="btn btn-danger" onclick="goBack()">Back</button>
+        <div class="form-group">
+            <label for="pastResultsClass">Class</label>
+            <select id="pastResultsClass" name="pastResultsClass">
+                <option value="">Select Class</option>
+                <option value="Form 1">Form 1</option>
+                <option value="Form 2">Form 2</option>
+                <option value="Form 3">Form 3</option>
+                <option value="Form 4">Form 4</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="pastResultsStream">Stream</label>
+            <select id="pastResultsStream" name="pastResultsStream">
+                <option value="">Select Stream</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="pastResultsYear">Year</label>
+            <select id="pastResultsYear" name="pastResultsYear">
+                <option value="">Select Year</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="pastResultsExamType">Exam Type</label>
+            <select id="pastResultsExamType" name="pastResultsExamType">
+                <option value="">Select Exam Type</option>
+                <option value="Midterm">Midterm</option>
+                <option value="Terminal">Terminal</option>
+                <option value="Weekly Test">Weekly Test</option>
+                <option value="Mock">Mock</option>
+                <option value="Pre-National">Pre-National</option>
+                <option value="Annual">Annual</option>
+                <option value="Classes Test">Classes Test</option>
+                <option value="Other Exam">Other Exam</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" id="viewPastResultsBtn">View Past Results</button>
+        <button class="btn btn-success" id="showPastResultsDisplayBtn">Show Past Results</button>
+        <button class="btn btn-success" id="printPastResultsBtn">Print Past Results (PDF)</button>
+        <button class="btn btn-success" id="exportPastToCSVBtn">Export to CSV</button>
+        <button class="btn btn-success" id="exportPastToWordBtn">Export to Word</button>
+        <button class="btn btn-danger" id="hidePastResultsDisplayBtn" style="display: none;">Hide Past Results</button>
+        <div id="pastResultsDisplay" style="margin-top: 15px; display: none;"></div>
+    </div>
+</div>
+
+            <!-- Send SMS Tab -->
+            <div id="sms" class="tab-content">
+                <div class="card">
+                    <h2>Send SMS to Parents</h2>
+                    <button class="btn btn-danger" onclick="goBack()">Back</button>
+                    <div class="form-group">
+                        <label for="smsClass">Class</label>
+                        <select id="smsClass" name="smsClass">
+                            <option value="">Select Class</option>
+                            <option value="Form 1">Form 1</option>
+                            <option value="Form 2">Form 2</option>
+                            <option value="Form 3">Form 3</option>
+                            <option value="Form 4">Form 4</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="smsStream">Stream</label>
+                        <select id="smsStream" name="smsStream">
+                            <option value="">Select Stream</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="smsYear">Year</label>
+                        <select id="smsYear" name="smsYear">
+                            <option value="">Select Year</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="smsExamType">Exam Type</label>
+                        <select id="smsExamType" name="smsExamType">
+                            <option value="">Select Exam Type</option>
+                            <option value="Midterm">Midterm</option>
+                            <option value="Terminal">Terminal</option>
+                            <option value="Weekly Test">Weekly Test</option>
+                            <option value="Mock">Mock</option>
+                            <option value="Pre-National">Pre-National</option>
+                            <option value="Annual">Annual</option>
+                            <option value="Classes Test">Classes Test</option>
+                            <option value="Other Exam">Other Exam</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="loadStudentsForSMSBtn">Load Students</button>
+                    <div id="smsStudentList" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+
+            <!-- Academic Office Tab -->
+            <div id="academic" class="tab-content">
+                <div class="card">
+                    <h2>Academic Office Login</h2>
+                    <button class="btn btn-danger" onclick="goBack()">Back</button>
+                    <div id="academicLoginForm">
+                        <div class="form-group">
+                            <label for="academicPassword">Password</label>
+                            <input type="password" id="academicPassword" name="academicPassword">
+                        </div>
+                        <button class="btn btn-primary" id="loginAcademicBtn">Login</button>
+                    </div>
+                    <div id="academicPanel" style="display: none;">
+                        <h2>Academic Office</h2>
+                        <button class="btn btn-danger" id="logoutAcademicBtn">Logout</button>
+                        <div class="card">
+                            <h3>Configure Exam Types</h3>
+                            <form id="examTypeSettingsForm">
+                                <div class="form-group">
+                                    <label for="allowedExamTypes">Allowed Exam Types</label>
+                                    <select id="allowedExamTypes" name="allowedExamTypes" multiple required>
+                                        <option value="Midterm">Midterm</option>
+                                        <option value="Terminal">Terminal</option>
+                                        <option value="Weekly Test">Weekly Test</option>
+                                        <option value="Mock">Mock</option>
+                                        <option value="Pre-National">Pre-National</option>
+                                        <option value="Annual">Annual</option>
+                                        <option value="Classes Test">Classes Test</option>
+                                        <option value="Other Exam">Other Exam</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                            </form>
+                        </div>
+                        <div class="card">
+                            <h3>Manage Announcement</h3>
+                            <form id="announcementForm">
+                                <div class="form-group">
+                                    <label for="announcementText">Announcement</label>
+                                    <textarea id="announcementText" name="announcementText" rows="5" style="width: 100%;" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Post/Update</button>
+                                <button type="button" class="btn btn-danger" id="deleteAnnouncementBtn">Delete Announcement</button>
+                            </form>
+                        </div>
+                        <div class="card">
+                            <h3>Registered Teachers</h3>
+                            <div id="teacherList" style="margin-top: 15px;"></div>
+                            <button class="btn btn-danger" id="deleteTeacherBtn">Delete Selected Teacher</button>
+                        </div>
+                        <div class="card">
+                            <h3>Registered Students</h3>
+                            <div class="form-group">
+                                <label for="deleteStudentClass">Class</label>
+                                <select id="deleteStudentClass" name="deleteStudentClass">
+                                    <option value="">Select Class</option>
+                                    <option value="Form 1">Form 1</option>
+                                    <option value="Form 2">Form 2</option>
+                                    <option value="Form 3">Form 3</option>
+                                    <option value="Form 4">Form 4</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="deleteStudentStream">Stream</label>
+                                <select id="deleteStudentStream" name="deleteStudentStream">
+                                    <option value="">Select Stream</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="deleteStudentYear">Year</label>
+                                <select id="deleteStudentYear" name="deleteStudentYear">
+                                    <option value="">Select Year</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                </select>
+                            </div>
+                            <div id="studentDeleteList" style="margin-top: 15px;"></div>
+                            <button class="btn btn-danger" id="deleteStudentBtn">Delete Selected Students</button>
+                        </div>
+                        <div class="card">
+                            <h3>Allow Teachers to Enter Results Without Registration</h3>
+                            <form id="allowTeacherForm">
+                                <div class="form-group">
+                                    <label for="allowTeachersWithoutRegistration">Allow All Teachers</label>
+                                    <input type="checkbox" id="allowTeachersWithoutRegistration" name="allowTeachersWithoutRegistration">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </form>
+                        </div>
+                        <div class="card">
+                            <h3>Feature Visibility</h3>
+                            <form id="featureVisibilityForm">
+                                <div class="form-group">
+                                    <label>Visible Tabs</label>
+                                    <div>
+                                        <input type="checkbox" id="visibleRegister" name="visibleRegister" checked> Register Students<br>
+                                        <input type="checkbox" id="visibleStudents" name="visibleStudents" checked> Students List<br>
+                                        <input type="checkbox" id="visibleResultsEntry" name="visibleResultsEntry" checked> Enter Results<br>
+                                        <input type="checkbox" id="visibleResults" name="visibleResults" checked> View Results<br>
+                                        <input type="checkbox" id="visiblePastResults" name="visiblePastResults" checked> Past Results<br>
+                                        <input type="checkbox" id="visibleSMS" name="visibleSMS" checked> Send SMS
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Visibility</button>
+                            </form>
+                        </div>
+                        <div class="card">
+                            <h3>Change Academic Password</h3>
+                            <form id="changePasswordForm">
+                                <div class="form-group">
+                                    <label for="newAcademicPassword">New Password</label>
+                                    <input type="password" id="newAcademicPassword" name="newAcademicPassword" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmAcademicPassword">Confirm Password</label>
+                                    <input type="password" id="confirmAcademicPassword" name="confirmAcademicPassword" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Change Password</button>
+                            </form>
+                        </div>
+                        <div class="card">
+                            <h3>Delete Results</h3>
+                             <div class="form-group">
+                                <label for="deleteClass">Class</label>
+                                <select id="deleteClass" name="deleteClass">
+                                    <option value="">Select Class</option>
+                                    <option value="Form 1">Form 1</option>
+                                    <option value="Form 2">Form 2</option>
+                                    <option value="Form 3">Form 3</option>
+                                    <option value="Form 4">Form 4</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="deleteStream">Stream</label>
+                                <select id="deleteStream" name="deleteStream">
+                                    <option value="">Select Stream</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="deleteYear">Year</label>
+                                <select id="deleteYear" name="deleteYear">
+                                    <option value="">Select Year</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="deleteExamType">Exam Type</label>
+                                <select id="deleteExamType" name="deleteExamType">
+                                    <option value="">Select Exam Type</option>
+                                    <option value="Midterm">Midterm</option>
+                                    <option value="Terminal">Terminal</option>
+                                    <option value="Weekly Test">Weekly Test</option>
+                                    <option value="Mock">Mock</option>
+                                    <option value="Pre-National">Pre-National</option>
+                                    <option value="Annual">Annual</option>
+                                    <option value="Classes Test">Classes Test</option>
+                                    <option value="Other Exam">Other Exam</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-danger" id="deleteResultsBtn">Delete Results</button>
+                        </div>
+                        <div class="card">
+                            <h3>Archive Results</h3>
+                            <div class="form-group">
+                                <label for="archiveClass">Class</label>
+                                <select id="archiveClass" name="archiveClass">
+                                    <option value="">Select Class</option>
+                                    <option value="Form 1">Form 1</option>
+                                    <option value="Form 2">Form 2</option>
+                                    <option value="Form 3">Form 3</option>
+                                    <option value="Form 4">Form 4</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="archiveStream">Stream</label>
+                                <select id="archiveStream" name="archiveStream">
+                                    <option value="">Select Stream</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="archiveYear">Year</label>
+                                <select id="archiveYear" name="archiveYear">
+                                    <option value="">Select Year</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="archiveExamType">Exam Type</label>
+                                <select id="archiveExamType" name="archiveExamType">
+                                    <option value="">Select Exam Type</option>
+                                    <option value="Midterm">Midterm</option>
+                                    <option value="Terminal">Terminal</option>
+                                    <option value="Weekly Test">Weekly Test</option>
+                                    <option value="Mock">Mock</option>
+                                    <option value="Pre-National">Pre-National</option>
+                                    <option value="Annual">Annual</option>
+                                    <option value="Classes Test">Classes Test</option>
+                                    <option value="Other Exam">Other Exam</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-success" id="archiveResultsBtn">Archive</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="powered-by">
+            <button id="poweredByBtn">This program powered by Malosha</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        /* jslint browser: true, devel: true, es6: true, strict: true */
+        "use strict";
+
+        // Variables
+        let ACADEMIC_PASSWORD = '1340';
+        let students = [];
+        let teachers = [];
+        let results = [];
+        let pastResults = [];
+        let currentAnnouncement = null;
+        let allowedExamTypes = ['Midterm', 'Terminal', 'Weekly Test', 'Mock', 'Pre-National', 'Annual', 'Classes Test', 'Other Exam'];
+        let currentTeacher = null;
+        let currentAcademic = null;
+        let currentStudentsForResults = [];
+        let currentStudentIndex = 0;
+        let tempResults = [];
+        let smsStudents = [];
+        let allowTeachersWithoutRegistration = false;
+        let visibleFeatures = {
+            register: true,
+            students: true,
+            resultsEntry: true,
+            results: true,
+            pastResults: true,
+            sms: true
+        };
+        let navigationHistory = ['home'];
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCM7B6xJ1Xv8QVtE0ZEXBkJKvwHxSqCfaA",
+            authDomain: "bismarck-secondary-30220.firebaseapp.com",
+            databaseURL: "https://bismarck-secondary-30220-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "bismarck-secondary-30220",
+            storageBucket: "bismarck-secondary-30220.firebasestorage.app",
+            messagingSenderId: "826271341853",
+            appId: "1:826271341853:web:7b48672a4bcb7c9d0455f4",
+            measurementId: "G-20KQLWBT8E"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const maleNames = ['John', 'Joseph', 'Emmanuel', 'David', 'Peter', 'James', 'Michael', 'Thomas', 'Paul', 'Steven', 'Abdul', 'Hassan'];
+        const femaleNames = ['Mary', 'Anna', 'Elizabeth', 'Grace', 'Fatuma', 'Rose', 'Sarah', 'Esther', 'Lilian', 'Mercy', 'Zainab', 'Aisha'];
+
+         // Utility Functions
+        function showNotification(title, message, type = 'info') {
+            console.log(`Showing notification: ${title} - ${message}`);
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<h3>${title}</h3><p>${message}</p>`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+        function getTotalGrade(totalMarks, subjectCount) {
+    if (subjectCount === 0) return '-';
+    const averageMarks = totalMarks / subjectCount;
+    return getGrade(averageMarks);
+}
+
+
+
+        function getGrade(marks) {
+    if (marks >= 75 && marks <= 100) return 'A';
+    if (marks >= 65 && marks <= 74) return 'B';
+    if (marks >= 45 && marks <= 64) return 'C';
+    if (marks >= 30 && marks <= 44) return 'D';
+    return 'F';
+}
+
+function getGrade(marks) {
+            if (marks >= 75 && marks <= 100) return 'A';
+            if (marks >= 65 && marks <= 74) return 'B';
+            if (marks >= 45 && marks <= 64) return 'C';
+            if (marks >= 30 && marks <= 44) return 'D';
+            return 'F';
+        }
+function getPoints(grade) {
+    switch (grade) {
+        case 'A': return 1;
+        case 'B': return 2;
+        case 'C': return 3;
+        case 'D': return 4;
+        case 'F': return 5;
+        default: return null; // For EDK or invalid grades
+    }
+}
+
+// Add to global variables
+let sentSMSes = []; // Format: [{ studentId, examType }]
+
+// Modified loadStudentsForSMS
+function loadStudentsForSMS() {
+    console.log('Loading students for SMS');
+    const studentClass = document.getElementById('smsClass')?.value;
+    const stream = document.getElementById('smsStream')?.value;
+    const year = document.getElementById('smsYear')?.value;
+    const examType = document.getElementById('smsExamType')?.value;
+    const smsStudentListDiv = document.getElementById('smsStudentList');
+
+    if (!studentClass || !stream || !year || !examType || !smsStudentListDiv) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    smsStudents = students
+        .filter(s => s.class === studentClass && s.stream === stream && s.year === year)
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!smsStudents.length) {
+        smsStudentListDiv.innerHTML = '<p>No students found!</p>';
+        return;
+    }
+
+    let html = '<h3>Students for SMS</h3><div class="table-container"><table class="table"><thead><tr><th>Name</th><th>Phone Number</th><th>Action</th></tr></thead><tbody>';
+    smsStudents.forEach(student => {
+        const isSent = sentSMSes.some(s => s.studentId === student.id && s.examType === examType);
+        html += `<tr><td${isSent ? ' class="sms-sent"' : ''}>${student.fullName}</td><td>${student.phoneNumber || 'Not set'}</td>`;
+        html += `<td><button class="btn btn-primary" onclick="sendSMS('${student.id}', '${examType}')" ${isSent ? 'disabled' : ''}>Send SMS</button></td></tr>`;
+    });
+    html += '</tbody></table></div>';
+    smsStudentListDiv.innerHTML = html;
+}
+
+// Modified sendSMS
+function sendSMS(studentId, examType) {
+    console.log(`Sending SMS for student ID: ${studentId}`);
+    const student = students.find(s => s.id === studentId);
+    if (!student) {
+        showNotification('Error', 'Student not found!', 'error');
+        return;
+    }
+
+    if (!student.phoneNumber) {
+        showNotification('Information', 'No phone number set for this student!', 'error');
+        return;
+    }
+
+    const subjects = getSubjects();
+    let message = `Bismarck Secondary School\nResults for ${student.fullName}\n${student.class} ${student.stream} - ${examType} ${student.year}\n`;
+    const points = [];
+    subjects.forEach(subject => {
+        const result = results.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+        if (result) {
+            message += `${subject}: ${result.grade}\n`;
+            if (subject !== 'EDK' && ['A', 'B', 'C', 'D'].includes(result.grade)) {
+                points.push(getPoints(result.grade));
+            }
+        }
+    });
+    message += `Division: ${getDivision(points)}`;
+
+    const smsUrl = `sms:${student.phoneNumber}?body=${encodeURIComponent(message)}`;
+    window.location.href = smsUrl;
+
+    // Mark SMS as sent
+    sentSMSes.push({ studentId, examType });
+    showNotification('Success', `SMS prepared for ${student.fullName}!`, 'success');
+    loadStudentsForSMS(); // Refresh table to show checkmark
+}
+        
+function getDivision(pointsArray) {
+    // Filter out null points (e.g., from EDK) and sort to get top 7
+    const validPoints = pointsArray.filter(p => p !== null).sort((a, b) => a - b);
+    const top7 = validPoints.slice(0, 7);
+    const total = top7.reduce((sum, p) => sum + p, 0);
+
+    if (top7.length < 7) return '-'; // Not enough subjects for division
+    if (total >= 7 && total <= 17) return 'I';
+    if (total >= 18 && total <= 21) return 'II';
+    if (total >= 22 && total <= 25) return 'III';
+    if (total >= 26 && total <= 33) return 'IV';
+    if (total >= 34) return '0';
+    return '-';
+}
+        function getSubjects() {
+            return [
+                'Tanzania History', 'History', 'Geography', 'Kiswahili', 'English',
+                'Biology', 'Chemistry', 'Physics', 'Mathematics', 'Business Study',
+                'EDK', 'Book Keeping', 'Civics'
+            ];
+        }
+        
+        function getSubjectAbbreviation(subject) {
+            const abbreviations = {
+                'Tanzania History': 'T-HIST',
+                'History': 'HIST',
+                'Geography': 'GEOG',
+                'Kiswahili': 'KISW',
+                'English': 'ENGL',
+                'Biology': 'BIO',
+                'Chemistry': 'CHEM',
+                'Physics': 'PHYS',
+                'Mathematics': 'MATH',
+                'Business Study': 'B-STUDY',
+                'EDK': 'EDK',
+                'Book Keeping': 'B-KEEP',
+                'Civics': 'CIV'
+            };
+            return abbreviations[subject] || subject;
+        }
+
+        function detectGender(fullName) {
+            const firstName = fullName.split(' ')[0].toLowerCase();
+            if (maleNames.some(name => firstName.includes(name.toLowerCase()))) return 'Male';
+            if (femaleNames.some(name => firstName.includes(name.toLowerCase()))) return 'Female';
+            return 'Male';
+        }
+
+        function getMonthName(date) {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            return months[date.getMonth()];
+        }
+
+        function showSection(sectionId, showBtnId, hideBtnId) {
+            const section = document.getElementById(sectionId);
+            const showBtn = document.getElementById(showBtnId);
+            const hideBtn = document.getElementById(hideBtnId);
+            if (section && showBtn && hideBtn) {
+                section.style.display = 'block';
+                showBtn.style.display = 'none';
+                hideBtn.style.display = 'inline-block';
+            }
+        }
+
+        function hideSection(sectionId, showBtnId, hideBtnId) {
+            const section = document.getElementById(sectionId);
+            const showBtn = document.getElementById(showBtnId);
+            const hideBtn = document.getElementById(hideBtnId);
+            if (section && showBtn && hideBtn) {
+                section.style.display = 'none';
+                showBtn.style.display = 'inline-block';
+                hideBtn.style.display = 'none';
+            }
+        }
+        
+        function goBack() {
+            if (navigationHistory.length > 1) {
+                navigationHistory.pop();
+                const previousTab = navigationHistory[navigationHistory.length - 1];
+                openTab(previousTab);
+            } else {
+                openTab('home');
+            }
+        }
+
+        function openTab(tabName) {
+            console.log(`Opening tab: ${tabName}`);
+            if (!visibleFeatures[tabName] && tabName !== 'home' && tabName !== 'academic') {
+                showNotification('Information', 'This feature is disabled by the Academic Office.', 'error');
+                return;
+            }
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            tabItems.forEach(item => item.classList.remove('active'));
+            const tabContent = document.getElementById(tabName);
+            const tabItem = document.querySelector(`.tab-item[data-tab="${tabName}"]`);
+            if (tabContent && tabItem) {
+                tabContent.classList.add('active');
+                tabItem.classList.add('active');
+                if (!navigationHistory.includes(tabName)) {
+                    navigationHistory.push(tabName);
+                }
+                if (tabName === 'home') loadAnnouncements();
+                if (tabName === 'resultsEntry') checkTeacherAccess();
+                if (tabName === 'sms') loadStudentsForSMS();
+            }
+        }
+
+        function checkTeacherAccess() {
+            const teacherAuthPanel = document.getElementById('teacherAuthPanel');
+            const resultsEntryPanel = document.getElementById('resultsEntryPanel');
+            const editResultsPanel = document.getElementById('editResultsPanel');
+            if (teacherAuthPanel && resultsEntryPanel && editResultsPanel) {
+                if (allowTeachersWithoutRegistration || currentAcademic) {
+                    teacherAuthPanel.style.display = 'none';
+                    resultsEntryPanel.style.display = 'block';
+                    editResultsPanel.style.display = 'block';
+                    populateSubjectOptions();
+                    const resultSubject = document.getElementById('resultSubject');
+                    if (resultSubject) resultSubject.disabled = false;
+                } else {
+                    teacherAuthPanel.style.display = currentTeacher ? 'none' : 'block';
+                    resultsEntryPanel.style.display = currentTeacher ? 'block' : 'none';
+                    editResultsPanel.style.display = currentTeacher ? 'block' : 'none';
+                    if (currentTeacher) {
+                        const resultSubject = document.getElementById('resultSubject');
+                        if (resultSubject) {
+                            resultSubject.disabled = true;
+                            resultSubject.innerHTML = `<option value="${currentTeacher.subject}">${currentTeacher.subject}</option>`;
+                        }
+                    }
+                }
+            }
+        }
+
+        function populateSubjectOptions() {
+            const subjectSelect = document.getElementById('resultSubject');
+            if (subjectSelect) {
+                subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+                const subjects = getSubjects();
+                subjects.forEach(subject => {
+                    if (currentTeacher && currentTeacher.subject !== subject && !currentAcademic && !allowTeachersWithoutRegistration) return;
+                    const option = document.createElement('option');
+                    option.value = subject;
+                    option.textContent = subject;
+                    subjectSelect.appendChild(option);
+                });
+                subjectSelect.addEventListener('change', updateResultsTable);
+            }
+        }
+
+        function registerStudents(event) {
+    event.preventDefault();
+    console.log('Registering students');
+    const studentNames = document.getElementById('studentNames')?.value.split('\n').map(name => name.trim()).filter(name => name);
+    const studentClass = document.getElementById('class')?.value;
+    const stream = document.getElementById('stream')?.value;
+    const year = document.getElementById('year')?.value;
+    const regDate = document.getElementById('regDate')?.value;
+    const takesBusinessStudy = document.getElementById('takesBusinessStudy')?.checked;
+
+    if (!studentNames?.length || !studentClass || !stream || !year || !regDate) {
+        showNotification('Information', 'Please fill all form fields!', 'error');
+        return;
+    }
+
+    const updates = {};
+    studentNames.forEach(name => {
+        if (students.some(s => s.fullName === name && s.class === studentClass && s.stream === stream && s.year === year)) {
+            showNotification('Information', `Name ${name} is already registered for this class, stream, and year!`, 'error');
+            return;
+        }
+
+        const studentRef = database.ref('students').push();
+        const studentData = {
+            fullName: name,
+            class: studentClass,
+            stream,
+            year,
+            regDate,
+            subjectsTaken: takesBusinessStudy ? ['Business Study'] : [],
+            gender: detectGender(name),
+            phoneNumber: ''
+        };
+        updates[studentRef.key] = studentData;
+        students.push({ id: studentRef.key, ...studentData });
+    });
+
+    database.ref('students').update(updates).then(() => {
+        showNotification('Success', 'Students registered successfully!', 'success');
+        document.getElementById('registrationForm')?.reset();
+    }).catch(error => {
+        showNotification('Error', `Failed to register students: ${error.message}`, 'error');
+    });
+}
+
+function searchStudent() {
+    console.log('Searching student');
+    const searchName = document.getElementById('searchStudentName')?.value.trim();
+    const examType = document.getElementById('searchExamType')?.value;
+    const searchResultsDiv = document.getElementById('searchResults');
+
+    if (!searchName || !searchResultsDiv) {
+        showNotification('Information', 'Please enter a student name!', 'error');
+        return;
+    }
+
+    const matchedStudents = students
+        .filter(s => s.fullName.toLowerCase().includes(searchName.toLowerCase()))
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!matchedStudents.length) {
+        searchResultsDiv.innerHTML = '<p>No students found!</p>';
+        return;
+    }
+
+    let html = '<h3>Search Results</h3><div class="table-container"><table class="table"><thead><tr><th>Name</th><th>Gender</th><th>Class</th><th>Stream</th><th>Year</th>';
+    if (examType) {
+        getSubjects().forEach(subject => {
+            html += `<th>${getSubjectAbbreviation(subject)}</th>`;
+        });
+        html += '<th>Total Marks</th><th>Points</th><th>Division</th>';
+    }
+    html += '</tr></thead><tbody>';
+
+    matchedStudents.forEach(student => {
+        html += `<tr><td>${student.fullName}</td><td>${student.gender}</td><td>${student.class}</td><td>${student.stream}</td><td>${student.year}</td>`;
+        if (examType) {
+            let totalMarks = 0;
+            const points = [];
+            getSubjects().forEach(subject => {
+                const result = results.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+                const grade = result ? getGrade(result.marks) : '-';
+                html += `<td>${grade}</td>`;
+                if (result && subject !== 'EDK' && ['A', 'B', 'C', 'D'].includes(grade)) {
+                    totalMarks += parseInt(result.marks) || 0;
+                    points.push(getPoints(grade));
+                }
+            });
+            html += `<td>${totalMarks || '-'}</td><td>${points.reduce((sum, p) => sum + p, 0) || '-'}</td><td>${getDivision(points)}</td>`;
+        }
+        html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+    searchResultsDiv.innerHTML = html;
+}
+
+function viewStudents() {
+    console.log('Viewing students');
+    const studentClass = document.getElementById('studentClass')?.value;
+    const studentStream = document.getElementById('studentStream')?.value;
+    const studentYear = document.getElementById('studentYear')?.value;
+    const studentListDiv = document.getElementById('studentList');
+
+    if (!studentClass || !studentStream || !studentYear || !studentListDiv) {
+        showNotification('Information', 'Please select class, stream, and year!', 'error');
+        return;
+    }
+
+    const filteredStudents = students
+        .filter(s => s.class === studentClass && s.stream === studentStream && s.year === studentYear)
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!filteredStudents.length) {
+        studentListDiv.innerHTML = '<p>No students found!</p>';
+        return;
+    }
+
+    let html = '<h3>Student List</h3><div class="table-container"><table class="table"><thead><tr><th>Name</th><th>Gender</th><th>Class</th><th>Stream</th><th>Year</th><th>Phone Number</th><th>Update Phone</th><th>Update Gender</th></tr></thead><tbody>';
+    filteredStudents.forEach(student => {
+        html += `<tr><td>${student.fullName}</td><td>${student.gender}</td><td>${student.class}</td><td>${student.stream}</td><td>${student.year}</td>`;
+        html += `<td><input type="text" class="phone-input" data-student-id="${student.id}" value="${student.phoneNumber || ''}" placeholder="Enter phone"></td>`;
+        html += `<td><button class="btn btn-primary" onclick="updateStudentPhone('${student.id}')">Update</button></td>`;
+        html += `<td><select class="gender-select" data-student-id="${student.id}"><option value="Male" ${student.gender === 'Male' ? 'selected' : ''}>Male</option><option value="Female" ${student.gender === 'Female' ? 'selected' : ''}>Female</option></select>`;
+        html += `<button class="btn btn-primary" onclick="updateStudentGender('${student.id}')">Update</button></td></tr>`;
+    });
+    html += '</tbody></table></div>';
+    studentListDiv.innerHTML = html;
+
+    showSection('studentList', 'showStudentListBtn', 'hideStudentListBtn');
+}
+
+function updateStudentPhone(studentId) {
+    console.log(`Updating phone for student ID: ${studentId}`);
+    const phoneInput = document.querySelector(`.phone-input[data-student-id="${studentId}"]`);
+    const phoneNumber = phoneInput?.value.trim();
+
+    if (!phoneNumber) {
+        showNotification('Information', 'Please enter a phone number!', 'error');
+        return;
+    }
+
+    database.ref(`students/${studentId}`).update({ phoneNumber }).then(() => {
+        const student = students.find(s => s.id === studentId);
+        if (student) student.phoneNumber = phoneNumber;
+        showNotification('Success', 'Phone number updated successfully!', 'success');
+    }).catch(error => {
+        showNotification('Error', `Failed to update phone number: ${error.message}`, 'error');
+    });
+}
+
+function updateStudentGender(studentId) {
+    console.log(`Updating gender for student ID: ${studentId}`);
+    const genderSelect = document.querySelector(`.gender-select[data-student-id="${studentId}"]`);
+    const gender = genderSelect?.value;
+
+    if (!gender) {
+        showNotification('Information', 'Please select a gender!', 'error');
+        return;
+    }
+
+    database.ref(`students/${studentId}`).update({ gender }).then(() => {
+        const student = students.find(s => s.id === studentId);
+        if (student) student.gender = gender;
+        showNotification('Success', 'Gender updated successfully!', 'success');
+    }).catch(error => {
+        showNotification('Error', `Failed to update gender: ${error.message}`, 'error');
+    });
+}
+
+function loadStudentsForResults() {
+    console.log('Loading students for results');
+    const studentClass = document.getElementById('resultClass')?.value;
+    const stream = document.getElementById('resultStream')?.value;
+    const year = document.getElementById('resultYear')?.value;
+    const examType = document.getElementById('resultExamType')?.value;
+    const subject = document.getElementById('resultSubject')?.value;
+
+    if (!studentClass || !stream || !year || !examType || !subject) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    // Check for existing results
+    const existingResults = results.filter(r => 
+        r.class === studentClass && 
+        r.stream === stream && 
+        r.year === year && 
+        r.examType === examType && 
+        r.subject === subject
+    );
+
+    if (existingResults.length > 0) {
+        showNotification('Information', `Results for ${subject} (${examType}) have already been entered. Please select another subject.`, 'error');
+        document.getElementById('resultSubject').focus();
+        return;
+    }
+
+    currentStudentsForResults = students
+        .filter(s => s.class === studentClass && s.stream === stream && s.year === year)
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!currentStudentsForResults.length) {
+        showNotification('Information', 'No students found for the selected criteria!', 'error');
+        document.getElementById('resultEntryForm').style.display = 'none';
+        return;
+    }
+
+    // Reset progress for new subject
+    const progressKey = `progress_${studentClass}_${stream}_${year}_${examType}_${subject}`;
+    database.ref(`progress/${progressKey}`).once('value', snapshot => {
+        const progressData = snapshot.val();
+        if (progressData && confirm(`Resume entering marks for ${subject} from student ${progressData.currentStudentIndex + 1}?`)) {
+            currentStudentIndex = progressData.currentStudentIndex || 0;
+            tempResults = progressData.tempResults || [];
+        } else {
+            // Reset progress for this subject
+            currentStudentIndex = 0;
+            tempResults = [];
+            database.ref(`progress/${progressKey}`).remove();
+        }
+
+        updateResultEntryForm();
+        updateResultsTable();
+        showSection('resultEntryForm', 'showResultEntryFormBtn', 'hideResultEntryFormBtn');
+    }).catch(error => {
+        showNotification('Error', `Failed to load progress: ${error.message}`, 'error');
+        currentStudentIndex = 0;
+        tempResults = [];
+        updateResultEntryForm();
+        updateResultsTable();
+        showSection('resultEntryForm', 'showResultEntryFormBtn', 'hideResultEntryFormBtn');
+    });
+}
+
+function updateResultEntryForm() {
+    console.log('Updating result entry form');
+    const resultEntryForm = document.getElementById('resultEntryForm');
+    const currentStudentSpan = document.getElementById('currentStudent');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+
+    if (!resultEntryForm || !currentStudentSpan || !progressBar || !progressText) return;
+
+    if (currentStudentIndex >= currentStudentsForResults.length) {
+        showNotification('Success', `All marks for ${document.getElementById('resultSubject').value} have been entered! Please select another subject or submit.`, 'success');
+        resultEntryForm.style.display = 'none';
+        document.getElementById('resultSubject').focus();
+        // Clear progress after completion
+        const progressKey = `progress_${document.getElementById('resultClass').value}_${document.getElementById('resultStream').value}_${document.getElementById('resultYear').value}_${document.getElementById('resultExamType').value}_${document.getElementById('resultSubject').value}`;
+        database.ref(`progress/${progressKey}`).remove();
+        return;
+    }
+
+    const student = currentStudentsForResults[currentStudentIndex];
+    currentStudentSpan.textContent = student.fullName;
+    document.getElementById('marks').value = '';
+    const progress = (currentStudentIndex / currentStudentsForResults.length) * 100;
+    progressBar.style.width = `${progress}%`;
+    progressBar.textContent = `${Math.round(progress)}%`;
+    progressText.textContent = `Student ${currentStudentIndex + 1} of ${currentStudentsForResults.length}`;
+
+    // Save progress to Firebase
+    const progressKey = `progress_${document.getElementById('resultClass').value}_${document.getElementById('resultStream').value}_${document.getElementById('resultYear').value}_${document.getElementById('resultExamType').value}_${document.getElementById('resultSubject').value}`;
+    database.ref(`progress/${progressKey}`).set({
+        currentStudentIndex,
+        tempResults
+    }).catch(error => {
+        console.error(`Failed to save progress: ${error.message}`);
+    });
+}
+
+function saveMarks() {
+    console.log('Saving marks');
+    const marks = parseInt(document.getElementById('marks')?.value);
+    const student = currentStudentsForResults[currentStudentIndex];
+    const studentClass = document.getElementById('resultClass')?.value;
+    const stream = document.getElementById('resultStream')?.value;
+    const year = document.getElementById('resultYear')?.value;
+    const examType = document.getElementById('resultExamType')?.value;
+    const subject = document.getElementById('resultSubject')?.value;
+
+    if (isNaN(marks) || marks < 0 || marks > 100) {
+        showNotification('Information', 'Please enter valid marks (0–100)!', 'error');
+        return;
+    }
+
+    // Check if marks already exist in tempResults for this student and subject
+    const existingTempResult = tempResults.find(r => r.studentId === student.id && r.subject === subject && r.examType === examType);
+    if (existingTempResult) {
+        showNotification('Information', `Marks for ${student.fullName} in ${subject} (${examType}) already entered in this session!`, 'error');
+        return;
+    }
+
+    tempResults.push({
+        studentId: student.id,
+        fullName: student.fullName,
+        marks,
+        grade: getGrade(marks),
+        class: studentClass,
+        stream,
+        year,
+        examType,
+        subject
+    });
+
+    currentStudentIndex++;
+    updateResultEntryForm();
+    updateResultsTable();
+
+    // Save progress to Firebase
+    const progressKey = `progress_${studentClass}_${stream}_${year}_${examType}_${subject}`;
+    database.ref(`progress/${progressKey}`).set({
+        currentStudentIndex,
+        tempResults
+    }).catch(error => {
+        showNotification('Error', `Failed to save progress: ${error.message}`, 'error');
+    });
+}
+
+function printPastResults() {
+    console.log('Printing past results');
+    const pastResultsDisplayDiv = document.getElementById('pastResultsDisplay');
+    const studentClass = document.getElementById('pastResultsClass')?.value;
+    const stream = document.getElementById('pastResultsStream')?.value;
+    const year = document.getElementById('pastResultsYear')?.value;
+    const examType = document.getElementById('pastResultsExamType')?.value;
+
+    if (!pastResultsDisplayDiv.innerHTML) {
+        showNotification('Information', 'No past results to print!', 'error');
+        return;
+    }
+
+    const opt = {
+        margin: 1,
+        filename: `Bismarck_Past_Results_${studentClass}_${stream}_${examType}_${year}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().from(pastResultsDisplayDiv).set(opt).save();
+}
+
+function exportToCSV(classId, streamId, yearId, examTypeId, displayId) {
+    console.log('Exporting results to CSV');
+    const studentClass = document.getElementById(classId)?.value;
+    const stream = document.getElementById(streamId)?.value;
+    const year = document.getElementById(yearId)?.value;
+    const examType = document.getElementById(examTypeId)?.value;
+    const resultsDisplayDiv = document.getElementById(displayId);
+
+    if (!studentClass || !stream || !year || !examType || !resultsDisplayDiv.innerHTML) {
+        showNotification('Information', 'Please fill all fields and view results first!', 'error');
+        return;
+    }
+
+    const filteredStudents = students
+        .filter(s => s.class === studentClass && s.stream === stream && s.year === year)
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!filteredStudents.length) {
+        showNotification('Information', 'No students found to export!', 'error');
+        return;
+    }
+
+    // Create CSV header
+    let csv = 'Name,' + getSubjects().map(subject => `${getSubjectAbbreviation(subject)} Marks,${getSubjectAbbreviation(subject)} Grade`).join(',') + ',Total Marks,Total Grade,Points,Division\n';
+
+    // Populate CSV rows
+    filteredStudents.forEach(student => {
+        let row = [student.fullName.replace(/,/g, '')]; // Remove commas from names to avoid CSV issues
+        let totalMarks = 0;
+        let subjectCount = 0;
+        const points = [];
+
+        getSubjects().forEach(subject => {
+            const result = results.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+            const marks = result ? result.marks : '-';
+            const grade = result ? getGrade(result.marks) : '-';
+            row.push(marks, grade);
+            if (result && subject !== 'EDK' && ['A', 'B', 'C', 'D', 'F'].includes(grade)) {
+                totalMarks += parseInt(marks) || 0;
+                subjectCount++;
+                points.push(getPoints(grade));
+            }
+        });
+
+        const totalGrade = getTotalGrade(totalMarks, subjectCount);
+        const totalPoints = points.filter(p => p !== null).sort((a, b) => a - b).slice(0, 7).reduce((sum, p) => sum + p, 0) || '-';
+        const division = getDivision(points);
+
+        row.push(totalMarks || '-', totalGrade, totalPoints, division);
+        csv += row.join(',') + '\n';
+    });
+
+    // Create and download CSV file
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Bismarck_Results_${studentClass}_${stream}_${examType}_${year}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    showNotification('Success', 'Results exported to CSV successfully!', 'success');
+}
+
+function exportToWord(classId, streamId, yearId, examTypeId, displayId) {
+    console.log('Exporting results to Word');
+    const studentClass = document.getElementById(classId)?.value;
+    const stream = document.getElementById(streamId)?.value;
+    const year = document.getElementById(yearId)?.value;
+    const examType = document.getElementById(examTypeId)?.value;
+    const resultsDisplayDiv = document.getElementById(displayId);
+
+    if (!studentClass || !stream || !year || !examType || !resultsDisplayDiv.innerHTML) {
+        showNotification('Information', 'Please fill all fields and view results first!', 'error');
+        return;
+    }
+
+    const filteredStudents = students
+        .filter(s => s.class === studentClass && s.stream === stream && s.year === year)
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!filteredStudents.length) {
+        showNotification('Information', 'No students found to export!', 'error');
+        return;
+    }
+
+    // Create Word document
+    const doc = new docx.Document({
+        sections: [{
+            properties: {},
+            children: [
+                new docx.Paragraph({
+                    text: `Results for ${studentClass} ${stream} - ${examType} ${year}`,
+                    heading: docx.HeadingLevel.HEADING_1,
+                    alignment: docx.AlignmentType.CENTER,
+                }),
+                new docx.Paragraph({ text: '' }), // Empty line for spacing
+            ],
+        }],
+    });
+
+    // Create table headers
+    const subjects = getSubjects();
+    const headerRow = [
+        new docx.TableCell({
+            children: [new docx.Paragraph({ text: 'Name', bold: true })],
+            width: { size: 2000, type: docx.WidthType.DXA },
+        }),
+        ...subjects.map(subject => [
+            new docx.TableCell({
+                children: [new docx.Paragraph({ text: `${getSubjectAbbreviation(subject)} Marks`, bold: true })],
+                width: { size: 800, type: docx.WidthType.DXA },
+            }),
+            new docx.TableCell({
+                children: [new docx.Paragraph({ text: `${getSubjectAbbreviation(subject)} Grade`, bold: true })],
+                width: { size: 800, type: docx.WidthType.DXA },
+            }),
+        ]).flat(),
+        new docx.TableCell({
+            children: [new docx.Paragraph({ text: 'Total Marks', bold: true })],
+            width: { size: 1000, type: docx.WidthType.DXA },
+        }),
+        new docx.TableCell({
+            children: [new docx.Paragraph({ text: 'Total Grade', bold: true })],
+            width: { size: 1000, type: docx.WidthType.DXA },
+        }),
+        new docx.TableCell({
+            children: [new docx.Paragraph({ text: 'Points', bold: true })],
+            width: { size: 800, type: docx.WidthType.DXA },
+        }),
+        new docx.TableCell({
+            children: [new docx.Paragraph({ text: 'Division', bold: true })],
+            width: { size: 1000, type: docx.WidthType.DXA },
+        }),
+    ];
+
+    // Create table rows
+    const rows = filteredStudents.map(student => {
+        let totalMarks = 0;
+        let subjectCount = 0;
+        const points = [];
+        const cells = [
+            new docx.TableCell({
+                children: [new docx.Paragraph({ text: student.fullName })],
+            }),
+        ];
+
+        subjects.forEach(subject => {
+            const result = results.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+            const marks = result ? result.marks : '-';
+            const grade = result ? getGrade(result.marks) : '-';
+            cells.push(
+                new docx.TableCell({
+                    children: [new docx.Paragraph({ text: marks.toString() })],
+                }),
+                new docx.TableCell({
+                    children: [new docx.Paragraph({ text: grade })],
+                })
+            );
+            if (result && subject !== 'EDK' && ['A', 'B', 'C', 'D', 'F'].includes(grade)) {
+                totalMarks += parseInt(marks) || 0;
+                subjectCount++;
+                points.push(getPoints(grade));
+            }
+        });
+
+        const totalGrade = getTotalGrade(totalMarks, subjectCount);
+        const totalPoints = points.filter(p => p !== null).sort((a, b) => a - b).slice(0, 7).reduce((sum, p) => sum + p, 0) || '-';
+        const division = getDivision(points);
+
+        cells.push(
+            new docx.TableCell({
+                children: [new docx.Paragraph({ text: totalMarks.toString() || '-' })],
+            }),
+            new docx.TableCell({
+                children: [new docx.Paragraph({ text: totalGrade })],
+            }),
+            new docx.TableCell({
+                children: [new docx.Paragraph({ text: totalPoints.toString() })],
+            }),
+            new docx.TableCell({
+                children: [new docx.Paragraph({ text: division })],
+            })
+        );
+
+        return new docx.TableRow({ children: cells });
+    });
+
+    // Create table
+    const table = new docx.Table({
+        rows: [
+            new docx.TableRow({ children: headerRow }),
+            ...rows,
+        ],
+        width: { size: 100, type: docx.WidthType.PERCENTAGE },
+    });
+
+    // Add table to document
+    doc.sections[0].children.push(table);
+
+    // Generate and save the document
+    docx.Packer.toBlob(doc).then(blob => {
+        saveAs(blob, `Bismarck_Results_${studentClass}_${stream}_${examType}_${year}.docx`);
+        showNotification('Success', 'Results exported to Word successfully!', 'success');
+    }).catch(error => {
+        console.error('Error exporting to Word:', error);
+        showNotification('Error', 'Failed to export results to Word!', 'error');
+    });
+}
+
+function updateResultsTable() {
+    console.log('Updating results table');
+    const resultsTableDiv = document.getElementById('resultsTable');
+    const subject = document.getElementById('resultSubject')?.value;
+    if (!resultsTableDiv || !subject) return;
+
+    if (!tempResults.length) {
+        resultsTableDiv.innerHTML = '<p>No results entered yet!</p>';
+        return;
+    }
+
+    let html = `<h3>Results Table for ${subject}</h3><div class="table-container"><table class="table"><thead><tr><th>Name</th><th>Marks</th><th>Grade</th></tr></thead><tbody>`;
+    tempResults
+        .filter(result => result.subject === subject)
+        .forEach(result => {
+            html += `<tr><td>${result.fullName}</td><td>${result.marks}</td><td>${result.grade}</td></tr>`;
+        });
+    html += '</tbody></table></div>';
+    resultsTableDiv.innerHTML = html;
+
+    showSection('resultsTable', 'showResultsTableBtn', 'hideResultsTableBtn');
+}
+
+function submitResults() {
+    console.log('Submitting results');
+    const studentClass = document.getElementById('resultClass')?.value;
+    const stream = document.getElementById('resultStream')?.value;
+    const year = document.getElementById('resultYear')?.value;
+    const examType = document.getElementById('resultExamType')?.value;
+    const subject = document.getElementById('resultSubject')?.value;
+
+    const updates = {};
+    tempResults.forEach(result => {
+        const resultRef = database.ref('results').push();
+        updates[resultRef.key] = result;
+        results.push({ id: resultRef.key, ...result });
+    });
+
+    database.ref('results').update(updates).then(() => {
+        showNotification('Success', 'Results submitted successfully!', 'success');
+        // Clear progress
+        const progressKey = `progress_${studentClass}_${stream}_${year}_${examType}_${subject}`;
+        database.ref(`progress/${progressKey}`).remove();
+        tempResults = [];
+        currentStudentsForResults = [];
+        currentStudentIndex = 0;
+        document.getElementById('resultEntryForm').style.display = 'none';
+        document.getElementById('resultsTable').style.display = 'none';
+    }).catch(error => {
+        showNotification('Error', `Failed to submit results: ${error.message}`, 'error');
+    });
+}
+
+function loadEditResults() {
+    console.log('Loading results to edit');
+    const studentClass = document.getElementById('editResultClass')?.value;
+    const stream = document.getElementById('editResultStream')?.value;
+    const year = document.getElementById('editResultYear')?.value;
+    const examType = document.getElementById('editResultExamType')?.value;
+    const subject = document.getElementById('editResultSubject')?.value;
+    const editResultsTableDiv = document.getElementById('editResultsTable');
+
+    if (!studentClass || !stream || !year || !examType || !subject || !editResultsTableDiv) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    const filteredResults = results.filter(r => r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType && r.subject === subject);
+    if (!filteredResults.length) {
+        editResultsTableDiv.innerHTML = '<p>No results found!</p>';
+        return;
+    }
+
+    let html = '<h3>Edit Results</h3><div class="table-container"><table class="table"><thead><tr><th>Name</th><th>Marks</th><th>Grade</th></tr></thead><tbody>';
+    filteredResults.forEach(result => {
+        html += `<tr><td>${result.fullName}</td><td><input type="number" value="${result.marks}" data-result-id="${result.id}" class="edit-marks"></td><td>${result.grade}</td></tr>`;
+    });
+    html += '</tbody></table></div>';
+    editResultsTableDiv.innerHTML = html;
+
+    showSection('editResultsTable', 'showEditResultsTableBtn', 'hideEditResultsTableBtn');
+}
+
+function updateResults() {
+    console.log('Updating results');
+    const editMarksInputs = document.querySelectorAll('.edit-marks');
+    const updates = {};
+
+    editMarksInputs.forEach(input => {
+        const resultId = input.dataset.resultId;
+        const marks = parseInt(input.value);
+        if (isNaN(marks) || marks < 0 || marks > 100) {
+            showNotification('Information', 'Please enter valid marks (0–100)!', 'error');
+            return;
+        }
+        updates[resultId] = { marks, grade: getGrade(marks) };
+    });
+
+    const promises = Object.keys(updates).map(resultId => {
+        const result = results.find(r => r.id === resultId);
+        return database.ref(`results/${resultId}`).update({
+            marks: updates[resultId].marks,
+            grade: updates[resultId].grade
+        }).then(() => {
+            if (result) {
+                result.marks = updates[resultId].marks;
+                result.grade = updates[resultId].grade;
+            }
+        });
+    });
+
+    Promise.all(promises).then(() => {
+        showNotification('Success', 'Results updated successfully!', 'success');
+        document.getElementById('editResultsTable').style.display = 'none';
+    }).catch(error => {
+        showNotification('Error', `Failed to update results: ${error.message}`, 'error');
+    });
+}
+
+function viewResults() {
+    console.log('Viewing results');
+    const studentClass = document.getElementById('resultsClass')?.value;
+    const stream = document.getElementById('resultsStream')?.value;
+    const year = document.getElementById('resultsYear')?.value;
+    const examType = document.getElementById('resultsExamType')?.value;
+    const resultsDisplayDiv = document.getElementById('resultsDisplay');
+
+    if (!studentClass || !stream || !year || !examType || !resultsDisplayDiv) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    const filteredStudents = students
+        .filter(s => s.class === studentClass && s.stream === stream && s.year === year)
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!filteredStudents.length) {
+        resultsDisplayDiv.innerHTML = '<p>No students found!</p>';
+        return;
+    }
+
+    // Main Results Table
+    let html = `<div class="print-header"><h1>Bismarck Secondary School</h1><p>${studentClass} ${stream} - ${examType} ${year}</p></div>`;
+    html += '<div class="table-container"><table class="table"><thead><tr><th>Name</th>';
+    const subjects = getSubjects();
+    subjects.forEach(subject => {
+        html += `<th>${getSubjectAbbreviation(subject)} Marks</th><th>${getSubjectAbbreviation(subject)} Grade</th>`;
+    });
+    html += '<th>Total Marks</th><th>Total Grade</th><th>Points</th><th>Division</th></tr></thead><tbody>';
+
+    filteredStudents.forEach(student => {
+        html += `<tr><td>${student.fullName}</td>`;
+        let totalMarks = 0;
+        let subjectCount = 0;
+        const points = [];
+
+        subjects.forEach(subject => {
+            const result = results.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+            const marks = result ? result.marks : '-';
+            const grade = result ? getGrade(result.marks) : '-';
+            html += `<td>${marks}</td><td>${grade}</td>`;
+            if (result && subject !== 'EDK' && ['A', 'B', 'C', 'D', 'F'].includes(grade)) {
+                totalMarks += parseInt(marks) || 0;
+                subjectCount++;
+                points.push(getPoints(grade));
+            }
+        });
+
+        const totalGrade = getTotalGrade(totalMarks, subjectCount);
+        const totalPoints = points.filter(p => p !== null).sort((a, b) => a - b).slice(0, 7).reduce((sum, p) => sum + p, 0) || '-';
+        const division = getDivision(points);
+
+        html += `<td>${totalMarks || '-'}</td><td>${totalGrade}</td><td>${totalPoints}</td><td>${division}</td></tr>`;
+    });
+
+    html += '</tbody></table></div>';
+
+    // School Grade Summary Table
+    html += '<div class="summary-tables">';
+    html += `<table class="summary-table"><thead><tr><th colspan="8">School Grade Summary</th></tr><tr><th>Grade</th><th>Male</th><th>Female</th><th>Total</th><th>Male (%)</th><th>Female (%)</th><th>Total (%)</th><th>Total Students</th></tr></thead><tbody>`;
+    const grades = ['A', 'B', 'C', 'D', 'F'];
+    const totalResults = results.filter(r => r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType).length;
+    const maleStudents = filteredStudents.filter(s => s.gender === 'Male').length;
+    const femaleStudents = filteredStudents.filter(s => s.gender === 'Female').length;
+    const totalStudents = filteredStudents.length;
+
+    grades.forEach(grade => {
+        const maleCount = results.filter(r => {
+            const student = students.find(s => s.id === r.studentId && s.gender === 'Male');
+            return student && r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType && r.grade === grade;
+        }).length;
+        const femaleCount = results.filter(r => {
+            const student = students.find(s => s.id === r.studentId && s.gender === 'Female');
+            return student && r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType && r.grade === grade;
+        }).length;
+        const totalCount = maleCount + femaleCount;
+        const malePercent = totalResults ? ((maleCount / totalResults) * 100).toFixed(1) : 0;
+        const femalePercent = totalResults ? ((femaleCount / totalResults) * 100).toFixed(1) : 0;
+        const totalPercent = totalResults ? ((totalCount / totalResults) * 100).toFixed(1) : 0;
+
+        html += `<tr><td>${grade}</td><td>${maleCount}</td><td>${femaleCount}</td><td>${totalCount}</td><td>${malePercent}%</td><td>${femalePercent}%</td><td>${totalPercent}%</td><td>${totalStudents}</td></tr>`;
+    });
+
+    // Total Row
+    const totalMaleGrades = grades.reduce((sum, grade) => sum + results.filter(r => {
+        const student = students.find(s => s.id === r.studentId && s.gender === 'Male');
+        return student && r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType && r.grade === grade;
+    }).length, 0);
+    const totalFemaleGrades = grades.reduce((sum, grade) => sum + results.filter(r => {
+        const student = students.find(s => s.id === r.studentId && s.gender === 'Female');
+        return student && r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType && r.grade === grade;
+    }).length, 0);
+    const totalGrades = totalMaleGrades + totalFemaleGrades;
+    html += `<tr><td><strong>Total</strong></td><td>${totalMaleGrades}</td><td>${totalFemaleGrades}</td><td>${totalGrades}</td><td>-</td><td>-</td><td>-</td><td>${totalStudents}</td></tr>`;
+    html += '</tbody></table>';
+
+    // Division Summary Table
+    html += `<table class="summary-table"><thead><tr><th colspan="8">Division Summary</th></tr><tr><th>Division</th><th>Male</th><th>Female</th><th>Total</th><th>Male (%)</th><th>Female (%)</th><th>Total (%)</th><th>Total Students</th></tr></thead><tbody>`;
+    const divisions = ['I', 'II', 'III', 'IV', '0'];
+
+    divisions.forEach(division => {
+        const maleCount = filteredStudents.filter(student => {
+            const points = subjects.map(subject => {
+                const result = results.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+                return result && subject !== 'EDK' ? getPoints(getGrade(result.marks)) : null;
+            }).filter(p => p !== null).sort((a, b) => a - b).slice(0, 7);
+            const totalPoints = points.reduce((sum, p) => sum + p, 0);
+            return student.gender === 'Male' && getDivision(points) === division;
+        }).length;
+        const femaleCount = filteredStudents.filter(student => {
+            const points = subjects.map(subject => {
+                const result = results.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+                return result && subject !== 'EDK' ? getPoints(getGrade(result.marks)) : null;
+            }).filter(p => p !== null).sort((a, b) => a - b).slice(0, 7);
+            const totalPoints = points.reduce((sum, p) => sum + p, 0);
+            return student.gender === 'Female' && getDivision(points) === division;
+        }).length;
+        const totalCount = maleCount + femaleCount;
+        const malePercent = totalStudents ? ((maleCount / totalStudents) * 100).toFixed(1) : 0;
+        const femalePercent = totalStudents ? ((femaleCount / totalStudents) * 100).toFixed(1) : 0;
+        const totalPercent = totalStudents ? ((totalCount / totalStudents) * 100).toFixed(1) : 0;
+
+        html += `<tr><td>${division}</td><td>${maleCount}</td><td>${femaleCount}</td><td>${totalCount}</td><td>${malePercent}%</td><td>${femalePercent}%</td><td>${totalPercent}%</td><td>${totalStudents}</td></tr>`;
+    });
+
+    // Total Row for Divisions
+    const totalMaleDivisions = filteredStudents.filter(s => s.gender === 'Male').length;
+    const totalFemaleDivisions = filteredStudents.filter(s => s.gender === 'Female').length;
+    const totalDivisions = totalMaleDivisions + totalFemaleDivisions;
+    html += `<tr><td><strong>Total</strong></td><td>${totalMaleDivisions}</td><td>${totalFemaleDivisions}</td><td>${totalDivisions}</td><td>-</td><td>-</td><td>-</td><td>${totalStudents}</td></tr>`;
+    html += '</tbody></table>';
+    html += '</div>';
+
+    resultsDisplayDiv.innerHTML = html;
+    showSection('resultsDisplay', 'showResultsDisplayBtn', 'hideResultsDisplayBtn');
+}
+
+function printResults() {
+    console.log('Printing results');
+    const resultsDisplayDiv = document.getElementById('resultsDisplay');
+    const studentClass = document.getElementById('resultsClass')?.value;
+    const stream = document.getElementById('resultsStream')?.value;
+    const year = document.getElementById('resultsYear')?.value;
+    const examType = document.getElementById('resultsExamType')?.value;
+
+    if (!resultsDisplayDiv.innerHTML) {
+        showNotification('Information', 'No results to print!', 'error');
+        return;
+    }
+
+    const opt = {
+        margin: 1,
+        filename: `Bismarck_Results_${studentClass}_${stream}_${examType}_${year}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().from(resultsDisplayDiv).set(opt).save();
+}
+
+function viewPastResults() {
+    console.log('Viewing past results');
+    const studentClass = document.getElementById('pastResultsClass')?.value;
+    const stream = document.getElementById('pastResultsStream')?.value;
+    const year = document.getElementById('pastResultsYear')?.value;
+    const examType = document.getElementById('pastResultsExamType')?.value;
+    const pastResultsDisplayDiv = document.getElementById('pastResultsDisplay');
+
+    if (!studentClass || !stream || !year || !examType || !pastResultsDisplayDiv) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    const filteredStudents = students
+        .filter(s => s.class === studentClass && s.stream === stream && s.year === year)
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!filteredStudents.length) {
+        pastResultsDisplayDiv.innerHTML = '<p>No students found!</p>';
+        return;
+    }
+
+    // Main Results Table
+    let html = `<div class="print-header"><h1>Bismarck Secondary School</h1><p>Past Results: ${studentClass} ${stream} - ${examType} ${year}</p></div>`;
+    html += '<div class="table-container"><table class="table"><thead><tr><th>Name</th>';
+    const subjects = getSubjects();
+    subjects.forEach(subject => {
+        html += `<th>${getSubjectAbbreviation(subject)} Marks</th><th>${getSubjectAbbreviation(subject)} Grade</th>`;
+    });
+    html += '<th>Total Marks</th><th>Total Grade</th><th>Points</th><th>Division</th></tr></thead><tbody>';
+
+    filteredStudents.forEach(student => {
+        html += `<tr><td>${student.fullName}</td>`;
+        let totalMarks = 0;
+        let subjectCount = 0;
+        const points = [];
+
+        subjects.forEach(subject => {
+            const result = pastResults.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+            const marks = result ? result.marks : '-';
+            const grade = result ? getGrade(result.marks) : '-';
+            html += `<td>${marks}</td><td>${grade}</td>`;
+            if (result && subject !== 'EDK' && ['A', 'B', 'C', 'D', 'F'].includes(result.grade)) {
+                totalMarks += parseInt(marks) || 0;
+                subjectCount++;
+                points.push(getPoints(grade));
+            }
+        });
+
+        const totalGrade = getTotalGrade(totalMarks, subjectCount);
+        const totalPoints = points.filter(p => p !== null).sort((a, b) => a - b).slice(0, 7).reduce((sum, p) => sum + p, 0) || '-';
+        const division = getDivision(points);
+
+        html += `<td>${totalMarks || '-'}</td><td>${totalGrade}</td><td>${totalPoints}</td><td>${division}</td></tr>`;
+    });
+
+    html += '</tbody></table></div>';
+
+    // School Grade Summary Table
+    html += '<div class="summary-tables">';
+    html += `<table class="summary-table"><thead><tr><th colspan="8">School Grade Summary</th></tr><tr><th>Grade</th><th>Male</th><th>Female</th><th>Total</th><th>Male (%)</th><th>Female (%)</th><th>Total (%)</th><th>Total Students</th></tr></thead><tbody>`;
+    const grades = ['A', 'B', 'C', 'D', 'F'];
+    const totalResults = pastResults.filter(r => r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType).length;
+    const maleStudents = filteredStudents.filter(s => s.gender === 'Male').length;
+    const femaleStudents = filteredStudents.filter(s => s.gender === 'Female').length;
+    const totalStudents = filteredStudents.length;
+
+    grades.forEach(grade => {
+        const maleCount = pastResults.filter(r => {
+            const student = students.find(s => s.id === r.studentId && s.gender === 'Male');
+            return student && r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType && r.grade === grade;
+        }).length;
+        const femaleCount = pastResults.filter(r => {
+            const student = students.find(s => s.id === r.studentId && s.gender === 'Female');
+            return student && r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType && r.grade === grade;
+        }).length;
+        const totalCount = maleCount + femaleCount;
+        const malePercent = totalResults ? ((maleCount / totalResults) * 100).toFixed(1) : 0;
+        const femalePercent = totalResults ? ((femaleCount / totalResults) * 100).toFixed(1) : 0;
+        const totalPercent = totalResults ? ((totalCount / totalResults) * 100).toFixed(1) : 0;
+
+        html += `<tr><td>${grade}</td><td>${maleCount}</td><td>${femaleCount}</td><td>${totalCount}</td><td>${malePercent}%</td><td>${femalePercent}%</td><td>${totalPercent}%</td><td>${totalStudents}</td></tr>`;
+    });
+
+    // Total Row
+    const totalMaleGrades = grades.reduce((sum, grade) => sum + pastResults.filter(r => {
+        const student = students.find(s => s.id === r.studentId && s.gender === 'Male');
+        return student && r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType && r.grade === grade;
+    }).length, 0);
+    const totalFemaleGrades = grades.reduce((sum, grade) => sum + pastResults.filter(r => {
+        const student = students.find(s => s.id === r.studentId && s.gender === 'Female');
+        return student && r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType && r.grade === grade;
+    }).length, 0);
+    const totalGrades = totalMaleGrades + totalFemaleGrades;
+    html += `<tr><td><strong>Total</strong></td><td>${totalMaleGrades}</td><td>${totalFemaleGrades}</td><td>${totalGrades}</td><td>-</td><td>-</td><td>-</td><td>${totalStudents}</td></tr>`;
+    html += '</tbody></table>';
+
+    // Division Summary Table
+    html += `<table class="summary-table"><thead><tr><th colspan="8">Division Summary</th></tr><tr><th>Division</th><th>Male</th><th>Female</th><th>Total</th><th>Male (%)</th><th>Female (%)</th><th>Total (%)</th><th>Total Students</th></tr></thead><tbody>`;
+    const divisions = ['I', 'II', 'III', 'IV', '0'];
+
+    divisions.forEach(division => {
+        const maleCount = filteredStudents.filter(student => {
+            const points = subjects.map(subject => {
+                const result = pastResults.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+                return result && subject !== 'EDK' ? getPoints(getGrade(result.marks)) : null;
+            }).filter(p => p !== null).sort((a, b) => a - b).slice(0, 7);
+            return student.gender === 'Male' && getDivision(points) === division;
+        }).length;
+        const femaleCount = filteredStudents.filter(student => {
+            const points = subjects.map(subject => {
+                const result = pastResults.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+                return result && subject !== 'EDK' ? getPoints(getGrade(result.marks)) : null;
+            }).filter(p => p !== null).sort((a, b) => a - b).slice(0, 7);
+            return student.gender === 'Female' && getDivision(points) === division;
+        }).length;
+        const totalCount = maleCount + femaleCount;
+        const malePercent = totalStudents ? ((maleCount / totalStudents) * 100).toFixed(1) : 0;
+        const femalePercent = totalStudents ? ((femaleCount / totalStudents) * 100).toFixed(1) : 0;
+        const totalPercent = totalStudents ? ((totalCount / totalStudents) * 100).toFixed(1) : 0;
+
+        html += `<tr><td>${division}</td><td>${maleCount}</td><td>${femaleCount}</td><td>${totalCount}</td><td>${malePercent}%</td><td>${femalePercent}%</td><td>${totalPercent}%</td><td>${totalStudents}</td></tr>`;
+    });
+
+    // Total Row for Divisions
+    const totalMaleDivisions = filteredStudents.filter(s => s.gender === 'Male').length;
+    const totalFemaleDivisions = filteredStudents.filter(s => s.gender === 'Female').length;
+    const totalDivisions = totalMaleDivisions + totalFemaleDivisions;
+    html += `<tr><td><strong>Total</strong></td><td>${totalMaleDivisions}</td><td>${totalFemaleDivisions}</td><td>${totalDivisions}</td><td>-</td><td>-</td><td>-</td><td>${totalStudents}</td></tr>`;
+    html += '</tbody></table>';
+    html += '</div>';
+
+    pastResultsDisplayDiv.innerHTML = html;
+    showSection('pastResultsDisplay', 'showPastResultsDisplayBtn', 'hidePastResultsDisplayBtn');
+}
+
+function loadStudentsForSMS() {
+    console.log('Loading students for SMS');
+    const studentClass = document.getElementById('smsClass')?.value;
+    const stream = document.getElementById('smsStream')?.value;
+    const year = document.getElementById('smsYear')?.value;
+    const examType = document.getElementById('smsExamType')?.value;
+    const smsStudentListDiv = document.getElementById('smsStudentList');
+
+    if (!studentClass || !stream || !year || !examType || !smsStudentListDiv) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    smsStudents = students
+        .filter(s => s.class === studentClass && s.stream === stream && s.year === year)
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!smsStudents.length) {
+        smsStudentListDiv.innerHTML = '<p>No students found!</p>';
+        return;
+    }
+
+    let html = '<h3>Students for SMS</h3><div class="table-container"><table class="table"><thead><tr><th>Name</th><th>Phone Number</th><th>Action</th></tr></thead><tbody>';
+    smsStudents.forEach(student => {
+        html += `<tr><td>${student.fullName}</td><td>${student.phoneNumber || 'Not set'}</td>`;
+        html += `<td><button class="btn btn-primary" onclick="sendSMS('${student.id}', '${examType}')">Send SMS</button></td></tr>`;
+    });
+    html += '</tbody></table></div>';
+    smsStudentListDiv.innerHTML = html;
+}
+
+function sendSMS(studentId, examType) {
+    console.log(`Sending SMS for student ID: ${studentId}`);
+    const student = students.find(s => s.id === studentId);
+    if (!student) {
+        showNotification('Error', 'Student not found!', 'error');
+        return;
+    }
+
+    if (!student.phoneNumber) {
+        showNotification('Information', 'No phone number set for this student!', 'error');
+        return;
+    }
+
+    const subjects = getSubjects();
+    let message = `Bismarck Secondary School\nResults for ${student.fullName}\n${student.class} ${student.stream} - ${examType} ${student.year}\n`;
+    const points = [];
+    subjects.forEach(subject => {
+        const result = results.find(r => r.studentId === student.id && r.examType === examType && r.subject === subject);
+        if (result) {
+            message += `${subject}: ${result.grade}\n`;
+            if (subject !== 'EDK' && ['A', 'B', 'C', 'D'].includes(result.grade)) {
+                points.push(getPoints(result.grade));
+            }
+        }
+    });
+    message += `Division: ${getDivision(points)}`;
+
+    const smsUrl = `sms:${student.phoneNumber}?body=${encodeURIComponent(message)}`;
+    window.location.href = smsUrl;
+
+    showNotification('Success', `SMS prepared for ${student.fullName}!`, 'success');
+}
+
+function registerTeacher(event) {
+    event.preventDefault();
+    console.log('Registering teacher');
+    const teacherName = document.getElementById('authTeacherName')?.value.trim();
+    const password = document.getElementById('authTeacherPassword')?.value;
+    const subject = document.getElementById('authSubject')?.value;
+
+    if (!teacherName || !password || !subject) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    if (teachers.some(t => t.name === teacherName && t.subject === subject)) {
+        showNotification('Information', 'Teacher already registered for this subject!', 'error');
+        return;
+    }
+
+    const teacherRef = database.ref('teachers').push();
+    const teacherData = { name: teacherName, password, subject };
+    database.ref(`teachers/${teacherRef.key}`).set(teacherData).then(() => {
+        teachers.push({ id: teacherRef.key, ...teacherData });
+        showNotification('Success', 'Teacher registered successfully!', 'success');
+        document.getElementById('teacherAuthForm')?.reset();
+    }).catch(error => {
+        showNotification('Error', `Failed to register teacher: ${error.message}`, 'error');
+    });
+}
+
+function loginTeacher(event) {
+    event.preventDefault();
+    console.log('Logging in teacher');
+    const teacherName = document.getElementById('authTeacherName')?.value.trim();
+    const password = document.getElementById('authTeacherPassword')?.value;
+    const subject = document.getElementById('authSubject')?.value;
+
+    if (!teacherName || !password || !subject) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    const teacher = teachers.find(t => t.name === teacherName && t.password === password && t.subject === subject);
+    if (!teacher) {
+        showNotification('Information', 'Invalid credentials or teacher not registered!', 'error');
+        return;
+    }
+
+    currentTeacher = teacher;
+    checkTeacherAccess();
+    showNotification('Success', 'Teacher logged in successfully!', 'success');
+    document.getElementById('teacherAuthForm')?.reset();
+}
+
+function logoutTeacher() {
+    console.log('Logging out teacher');
+    currentTeacher = null;
+    checkTeacherAccess();
+    showNotification('Success', 'Teacher logged out successfully!', 'success');
+}
+
+function loginAcademic() {
+    console.log('Logging in academic');
+    const password = document.getElementById('academicPassword')?.value;
+    if (password !== ACADEMIC_PASSWORD) {
+        showNotification('Information', 'Invalid password!', 'error');
+        return;
+    }
+
+    currentAcademic = true;
+    document.getElementById('academicLoginForm').style.display = 'none';
+    document.getElementById('academicPanel').style.display = 'block';
+    loadTeachers();
+    loadStudentsForDeletion();
+    showNotification('Success', 'Academic office logged in successfully!', 'success');
+}
+
+function logoutAcademic() {
+    console.log('Logging out academic');
+    currentAcademic = null;
+    document.getElementById('academicLoginForm').style.display = 'block';
+    document.getElementById('academicPanel').style.display = 'none';
+    showNotification('Success', 'Academic office logged out successfully!', 'success');
+}
+
+function saveExamTypeSettings(event) {
+    event.preventDefault();
+    console.log('Saving exam type settings');
+    const allowedExamTypesSelect = document.getElementById('allowedExamTypes');
+    allowedExamTypes = Array.from(allowedExamTypesSelect.selectedOptions).map(option => option.value);
+
+    database.ref('settings/examTypes').set(allowedExamTypes).then(() => {
+        showNotification('Success', 'Exam types saved successfully!', 'success');
+        updateExamTypeOptions();
+    }).catch(error => {
+        showNotification('Error', `Failed to save exam types: ${error.message}`, 'error');
+    });
+}
+
+function updateExamTypeOptions() {
+    console.log('Updating exam type options');
+    const examTypeSelects = [
+        'searchExamType', 'resultExamType', 'editResultExamType',
+        'resultsExamType', 'pastResultsExamType', 'smsExamType',
+        'deleteExamType', 'archiveExamType'
+    ];
+    examTypeSelects.forEach(id => {
+        const select = document.getElementById(id);
+        if (select) {
+            select.innerHTML = '<option value="">Select Exam Type</option>';
+            allowedExamTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                select.appendChild(option);
+            });
+        }
+    });
+}
+
+function postAnnouncement(event) {
+    event.preventDefault();
+    console.log('Posting announcement');
+    const announcementText = document.getElementById('announcementText')?.value.trim();
+    if (!announcementText) {
+        showNotification('Information', 'Please enter announcement text!', 'error');
+        return;
+    }
+
+    const timestamp = new Date().toISOString();
+    currentAnnouncement = { text: announcementText, timestamp };
+    database.ref('announcement').set(currentAnnouncement).then(() => {
+        showNotification('Success', 'Announcement posted successfully!', 'success');
+        loadAnnouncements();
+    }).catch(error => {
+        showNotification('Error', `Failed to post announcement: ${error.message}`, 'error');
+    });
+}
+
+function deleteAnnouncement() {
+    console.log('Deleting announcement');
+    database.ref('announcement').remove().then(() => {
+        currentAnnouncement = null;
+        loadAnnouncements();
+        showNotification('Success', 'Announcement deleted successfully!', 'success');
+    }).catch(error => {
+        showNotification('Error', `Failed to delete announcement: ${error.message}`, 'error');
+    });
+}
+
+function loadAnnouncements() {
+    console.log('Loading announcements');
+    const announcementText = document.getElementById('announcementText');
+    const announcementTimestamp = document.getElementById('announcementTimestamp');
+    if (currentAnnouncement) {
+        announcementText.textContent = currentAnnouncement.text;
+        const date = new Date(currentAnnouncement.timestamp);
+        announcementTimestamp.textContent = `${date.getDate()} ${getMonthName(date)} ${date.getFullYear()}, ${date.toLocaleTimeString()}`;
+    } else {
+        announcementText.textContent = 'No announcements at the moment.';
+        announcementTimestamp.textContent = '';
+    }
+}
+
+function loadTeachers() {
+    console.log('Loading teachers');
+    const teacherListDiv = document.getElementById('teacherList');
+    if (!teacherListDiv) return;
+
+    if (!teachers.length) {
+        teacherListDiv.innerHTML = '<p>No teachers registered!</p>';
+        return;
+    }
+
+    let html = '<h3>Registered Teachers</h3><div class="table-container"><table class="table"><thead><tr><th>Select</th><th>Name</th><th>Subject</th></tr></thead><tbody>';
+    teachers.forEach(teacher => {
+        html += `<tr><td><input type="checkbox" class="teacher-checkbox" data-teacher-id="${teacher.id}"></td><td>${teacher.name}</td><td>${teacher.subject}</td></tr>`;
+    });
+    html += '</tbody></table></div>';
+    teacherListDiv.innerHTML = html;
+}
+
+function deleteTeacher() {
+    console.log('Deleting teacher');
+    const checkboxes = document.querySelectorAll('.teacher-checkbox:checked');
+    const teacherIds = Array.from(checkboxes).map(cb => cb.dataset.teacherId);
+
+    if (!teacherIds.length) {
+        showNotification('Information', 'Please select at least one teacher to delete!', 'error');
+        return;
+    }
+
+    const promises = teacherIds.map(id => database.ref(`teachers/${id}`).remove());
+    Promise.all(promises).then(() => {
+        teachers = teachers.filter(t => !teacherIds.includes(t.id));
+        loadTeachers();
+        showNotification('Success', 'Selected teachers deleted successfully!', 'success');
+    }).catch(error => {
+        showNotification('Error', `Failed to delete teachers: ${error.message}`, 'error');
+    });
+}
+
+function loadStudentsForDeletion() {
+    console.log('Loading students for deletion');
+    const studentClass = document.getElementById('deleteStudentClass')?.value;
+    const stream = document.getElementById('deleteStudentStream')?.value;
+    const year = document.getElementById('deleteStudentYear')?.value;
+    const studentDeleteListDiv = document.getElementById('studentDeleteList');
+
+    if (!studentClass || !stream || !year || !studentDeleteListDiv) {
+        studentDeleteListDiv.innerHTML = '<p>Please select class, stream, and year!</p>';
+        return;
+    }
+
+    const filteredStudents = students
+        .filter(s => s.class === studentClass && s.stream === stream && s.year === year)
+        .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    if (!filteredStudents.length) {
+        studentDeleteListDiv.innerHTML = '<p>No students found!</p>';
+        return;
+    }
+
+    let html = '<h3>Registered Students</h3><div class="table-container"><table class="table"><thead><tr><th>Select</th><th>Name</th><th>Class</th><th>Stream</th><th>Year</th></tr></thead><tbody>';
+    filteredStudents.forEach(student => {
+        html += `<tr><td><input type="checkbox" class="student-checkbox" data-student-id="${student.id}"></td><td>${student.fullName}</td><td>${student.class}</td><td>${student.stream}</td><td>${student.year}</td></tr>`;
+    });
+    html += '</tbody></table></div>';
+    studentDeleteListDiv.innerHTML = html;
+}
+
+function deleteStudent() {
+    console.log('Deleting student');
+    const checkboxes = document.querySelectorAll('.student-checkbox:checked');
+    const studentIds = Array.from(checkboxes).map(cb => cb.dataset.studentId);
+
+    if (!studentIds.length) {
+        showNotification('Information', 'Please select at least one student to delete!', 'error');
+        return;
+    }
+
+    const promises = studentIds.map(id => database.ref(`students/${id}`).remove());
+    Promise.all(promises).then(() => {
+        students = students.filter(s => !studentIds.includes(s.id));
+        loadStudentsForDeletion();
+        showNotification('Success', 'Selected students deleted successfully!', 'success');
+    }).catch(error => {
+        showNotification('Error', `Failed to delete students: ${error.message}`, 'error');
+    });
+}
+
+function allowTeachers(event) {
+    event.preventDefault();
+    console.log('Saving teacher allowance settings');
+    allowTeachersWithoutRegistration = document.getElementById('allowTeachersWithoutRegistration')?.checked;
+
+    database.ref('settings/allowTeachersWithoutRegistration').set(allowTeachersWithoutRegistration).then(() => {
+        showNotification('Success', 'Teacher allowance settings saved successfully!', 'success');
+        checkTeacherAccess();
+    }).catch(error => {
+        showNotification('Error', `Failed to save settings: ${error.message}`, 'error');
+    });
+}
+
+function saveFeatureVisibility(event) {
+    event.preventDefault();
+    console.log('Saving feature visibility');
+    visibleFeatures = {
+        register: document.getElementById('visibleRegister')?.checked,
+        students: document.getElementById('visibleStudents')?.checked,
+        resultsEntry: document.getElementById('visibleResultsEntry')?.checked,
+        results: document.getElementById('visibleResults')?.checked,
+        pastResults: document.getElementById('visiblePastResults')?.checked,
+        sms: document.getElementById('visibleSMS')?.checked
+    };
+
+    database.ref('settings/visibleFeatures').set(visibleFeatures).then(() => {
+        showNotification('Success', 'Feature visibility saved successfully!', 'success');
+        updateFeatureVisibility();
+    }).catch(error => {
+        showNotification('Error', `Failed to save feature visibility: ${error.message}`, 'error');
+    });
+}
+
+function updateFeatureVisibility() {
+    console.log('Updating feature visibility');
+    const tabItems = document.querySelectorAll('.tab-item');
+    tabItems.forEach(item => {
+        const tabName = item.dataset.tab;
+        if (tabName !== 'home' && tabName !== 'academic' && !visibleFeatures[tabName]) {
+            item.style.display = 'none';
+        } else {
+            item.style.display = 'block';
+        }
+    });
+}
+
+function changeAcademicPassword(event) {
+    event.preventDefault();
+    console.log('Changing academic password');
+    const newPassword = document.getElementById('newAcademicPassword')?.value;
+    const confirmPassword = document.getElementById('confirmAcademicPassword')?.value;
+
+    if (!newPassword || !confirmPassword) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        showNotification('Information', 'Passwords do not match!', 'error');
+        return;
+    }
+
+    ACADEMIC_PASSWORD = newPassword;
+    database.ref('settings/academicPassword').set(newPassword).then(() => {
+        showNotification('Success', 'Password changed successfully!', 'success');
+        document.getElementById('changePasswordForm')?.reset();
+    }).catch(error => {
+        showNotification('Error', `Failed to change password: ${error.message}`, 'error');
+    });
+}
+
+function deleteResults() {
+    console.log('Deleting results');
+    const studentClass = document.getElementById('deleteClass')?.value;
+    const stream = document.getElementById('deleteStream')?.value;
+    const year = document.getElementById('deleteYear')?.value;
+    const examType = document.getElementById('deleteExamType')?.value;
+
+    if (!studentClass || !stream || !year || !examType) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    const filteredResults = results.filter(r => r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType);
+    const promises = filteredResults.map(r => database.ref(`results/${r.id}`).remove());
+
+    Promise.all(promises).then(() => {
+        results = results.filter(r => !(r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType));
+        showNotification('Success', 'Results deleted successfully!', 'success');
+    }).catch(error => {
+        showNotification('Error', `Failed to delete results: ${error.message}`, 'error');
+    });
+}
+
+function archiveResults() {
+    console.log('Archiving results');
+    const studentClass = document.getElementById('archiveClass')?.value;
+    const stream = document.getElementById('archiveStream')?.value;
+    const year = document.getElementById('archiveYear')?.value;
+    const examType = document.getElementById('archiveExamType')?.value;
+
+    if (!studentClass || !stream || !year || !examType) {
+        showNotification('Information', 'Please fill all fields!', 'error');
+        return;
+    }
+
+    const filteredResults = results.filter(r => r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType);
+    const updates = {};
+    filteredResults.forEach(result => {
+        const pastResultRef = database.ref('pastResults').push();
+        updates[pastResultRef.key] = result;
+        pastResults.push({ id: pastResultRef.key, ...result });
+    });
+
+    database.ref('pastResults').update(updates).then(() => {
+        const promises = filteredResults.map(r => database.ref(`results/${r.id}`).remove());
+        return Promise.all(promises);
+    }).then(() => {
+        results = results.filter(r => !(r.class === studentClass && r.stream === stream && r.year === year && r.examType === examType));
+        showNotification('Success', 'Results archived successfully!', 'success');
+    }).catch(error => {
+        showNotification('Error', `Failed to archive results: ${error.message}`, 'error');
+    });
+}
+// Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing system');
+    // Hide loading spinner after 3 seconds
+    setTimeout(() => {
+        document.getElementById('loadingSpinner').classList.add('hidden');
+    }, 3000);
+
+    // Load data from Firebase
+    database.ref('students').on('value', snapshot => {
+        students = [];
+        snapshot.forEach(child => {
+            students.push({ id: child.key, ...child.val() });
+        });
+        console.log('Students loaded:', students.length);
+    });
+
+    database.ref('teachers').on('value', snapshot => {
+        teachers = [];
+        snapshot.forEach(child => {
+            teachers.push({ id: child.key, ...child.val() });
+        });
+        console.log('Teachers loaded:', teachers.length);
+        loadTeachers();
+    });
+
+    database.ref('results').on('value', snapshot => {
+        results = [];
+        snapshot.forEach(child => {
+            results.push({ id: child.key, ...child.val() });
+        });
+        console.log('Results loaded:', results.length);
+    });
+
+    database.ref('pastResults').on('value', snapshot => {
+        pastResults = [];
+        snapshot.forEach(child => {
+            pastResults.push({ id: child.key, ...child.val() });
+        });
+        console.log('Past results loaded:', pastResults.length);
+    });
+
+    database.ref('announcement').on('value', snapshot => {
+        currentAnnouncement = snapshot.val();
+        loadAnnouncements();
+    });
+
+    database.ref('settings/examTypes').on('value', snapshot => {
+        allowedExamTypes = snapshot.val() || ['Midterm', 'Terminal', 'Weekly Test', 'Mock', 'Pre-National', 'Annual', 'Classes Test', 'Other Exam'];
+        updateExamTypeOptions();
+    });
+
+    database.ref('settings/allowTeachersWithoutRegistration').on('value', snapshot => {
+        allowTeachersWithoutRegistration = snapshot.val() || false;
+        checkTeacherAccess();
+    });
+
+    database.ref('settings/visibleFeatures').on('value', snapshot => {
+        visibleFeatures = snapshot.val() || {
+            register: true,
+            students: true,
+            resultsEntry: true,
+            results: true,
+            pastResults: true,
+            sms: true
+        };
+        updateFeatureVisibility();
+    });
+
+    database.ref('settings/academicPassword').on('value', snapshot => {
+        ACADEMIC_PASSWORD = snapshot.val() || '1340';
+    });
+
+    // Event Listeners
+    document.querySelectorAll('.tab-item').forEach(item => {
+        item.addEventListener('click', () => openTab(item.dataset.tab));
+    });
+
+    document.getElementById('registrationForm')?.addEventListener('submit', registerStudents);
+    document.getElementById('searchStudentBtn')?.addEventListener('click', searchStudent);
+    document.getElementById('viewStudentsBtn')?.addEventListener('click', viewStudents);
+    document.getElementById('showStudentListBtn')?.addEventListener('click', () => showSection('studentList', 'showStudentListBtn', 'hideStudentListBtn'));
+    document.getElementById('hideStudentListBtn')?.addEventListener('click', () => hideSection('studentList', 'showStudentListBtn', 'hideStudentListBtn'));
+
+    document.getElementById('teacherAuthForm')?.addEventListener('submit', event => {
+        if (event.submitter.id === 'registerTeacherBtn') {
+            registerTeacher(event);
+        } else {
+            loginTeacher(event);
+        }
+    });
+
+   document.getElementById('viewResultsBtn')?.addEventListener('click', viewResults);
+document.getElementById('printResultsBtn')?.addEventListener('click', printResults);
+document.getElementById('showResultsDisplayBtn')?.addEventListener('click', () => showSection('resultsDisplay', 'showResultsDisplayBtn', 'hideResultsDisplayBtn'));
+document.getElementById('hideResultsDisplayBtn')?.addEventListener('click', () => hideSection('resultsDisplay', 'showResultsDisplayBtn', 'hideResultsDisplayBtn'));
+
+document.getElementById('viewPastResultsBtn')?.addEventListener('click', viewPastResults);
+document.getElementById('showPastResultsDisplayBtn')?.addEventListener('click', () => showSection('pastResultsDisplay', 'showPastResultsDisplayBtn', 'hidePastResultsDisplayBtn'));
+document.getElementById('hidePastResultsDisplayBtn')?.addEventListener('click', () => hideSection('pastResultsDisplay', 'showPastResultsDisplayBtn', 'hidePastResultsDisplayBtn'));
+document.getElementById('printPastResultsBtn')?.addEventListener('click', printPastResults); document.getElementById('logoutTeacherBtn')?.addEventListener('click', logoutTeacher);
+    document.getElementById('loadStudentsForResultsBtn')?.addEventListener('click', loadStudentsForResults);
+    document.getElementById('showResultEntryFormBtn')?.addEventListener('click', () => showSection('resultEntryForm', 'showResultEntryFormBtn', 'hideResultEntryFormBtn'));
+    document.getElementById('hideResultEntryFormBtn')?.addEventListener('click', () => hideSection('resultEntryForm', 'showResultEntryFormBtn', 'hideResultEntryFormBtn'));
+    document.getElementById('saveMarksBtn')?.addEventListener('click', saveMarks);
+    document.getElementById('showResultsTableBtn')?.addEventListener('click', () => showSection('resultsTable', 'showResultsTableBtn', 'hideResultsTableBtn'));
+    document.getElementById('hideResultsTableBtn')?.addEventListener('click', () => hideSection('resultsTable', 'showResultsTableBtn', 'hideResultsTableBtn'));
+    document.getElementById('submitResultsBtn')?.addEventListener('click', submitResults);
+    document.getElementById('loadEditResultsBtn')?.addEventListener('click', loadEditResults);
+    document.getElementById('showEditResultsTableBtn')?.addEventListener('click', () => showSection('editResultsTable', 'showEditResultsTableBtn', 'hideEditResultsTableBtn'));
+    document.getElementById('hideEditResultsTableBtn')?.addEventListener('click', () => hideSection('editResultsTable', 'showEditResultsTableBtn', 'hideEditResultsTableBtn'));
+    document.getElementById('updateResultsBtn')?.addEventListener('click', updateResults);
+
+    document.getElementById('viewResultsBtn')?.addEventListener('click', viewResults);
+document.getElementById('printResultsBtn')?.addEventListener('click', printResults);
+document.getElementById('exportToCSVBtn')?.addEventListener('click', () => exportToCSV('resultsClass', 'resultsStream', 'resultsYear', 'resultsExamType', 'resultsDisplay')); 
+
+document.getElementById('viewPastResultsBtn')?.addEventListener('click', viewPastResults);
+
+document.getElementById('printPastResultsBtn')?.addEventListener('click', printPastResults);
+
+document.getElementById('exportPastToCSVBtn')?.addEventListener('click', () => exportToCSV('pastResultsClass', 'pastResultsStream', 'pastResultsYear', 'pastResultsExamType', 'pastResultsDisplay')); 
+   document.getElementById('exportToWordBtn')?.addEventListener('click', () => exportToWord('resultsClass', 'resultsStream', 'resultsYear', 'resultsExamType', 'resultsDisplay'));
+document.getElementById('exportPastToWordBtn')?.addEventListener('click', () => exportToWord('pastResultsClass', 'pastResultsStream', 'pastResultsYear', 'pastResultsExamType', 'pastResultsDisplay'));
+    document.getElementById('showResultsDisplayBtn')?.addEventListener('click', () => showSection('resultsDisplay', 'showResultsDisplayBtn', 'hideResultsDisplayBtn'));
+    document.getElementById('hideResultsDisplayBtn')?.addEventListener('click', () => hideSection('resultsDisplay', 'showResultsDisplayBtn', 'hideResultsDisplayBtn'));
+
+    document.getElementById('viewPastResultsBtn')?.addEventListener('click', viewPastResults);
+    document.getElementById('showPastResultsDisplayBtn')?.addEventListener('click', () => showSection('pastResultsDisplay', 'showPastResultsDisplayBtn', 'hidePastResultsDisplayBtn'));
+    document.getElementById('hidePastResultsDisplayBtn')?.addEventListener('click', () => hideSection('pastResultsDisplay', 'showPastResultsDisplayBtn', 'hidePastResultsDisplayBtn'));
+
+    document.getElementById('loadStudentsForSMSBtn')?.addEventListener('click', loadStudentsForSMS);
+
+    document.getElementById('loginAcademicBtn')?.addEventListener('click', loginAcademic);
+    document.getElementById('logoutAcademicBtn')?.addEventListener('click', logoutAcademic);
+    document.getElementById('examTypeSettingsForm')?.addEventListener('submit', saveExamTypeSettings);
+    document.getElementById('announcementForm')?.addEventListener('submit', postAnnouncement);
+    document.getElementById('deleteAnnouncementBtn')?.addEventListener('click', deleteAnnouncement);
+    document.getElementById('deleteTeacherBtn')?.addEventListener('click', deleteTeacher);
+    document.getElementById('deleteStudentBtn')?.addEventListener('click', deleteStudent);
+    document.getElementById('allowTeacherForm')?.addEventListener('submit', allowTeachers);
+    document.getElementById('featureVisibilityForm')?.addEventListener('submit', saveFeatureVisibility);
+    document.getElementById('changePasswordForm')?.addEventListener('submit', changeAcademicPassword);
+    document.getElementById('deleteResultsBtn')?.addEventListener('click', deleteResults);
+    document.getElementById('archiveResultsBtn')?.addEventListener('click', archiveResults);
+
+    document.getElementById('deleteStudentClass')?.addEventListener('change', loadStudentsForDeletion);
+    document.getElementById('deleteStudentStream')?.addEventListener('change', loadStudentsForDeletion);
+    document.getElementById('deleteStudentYear')?.addEventListener('change', loadStudentsForDeletion);
+
+    document.getElementById('poweredByBtn').addEventListener('click', () => {
+        window.open('https://github.com/Malosha', '_blank');
+    });
+
+    // Populate subject options
+    populateSubjectOptions();
+    updateExamTypeOptions();
+    updateFeatureVisibility();
+});
+    </script>
+</body>
+</html>
